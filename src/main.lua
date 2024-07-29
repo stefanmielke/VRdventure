@@ -8,7 +8,7 @@ function lovr.load()
     right = lovr.graphics.newModel('assets/models/hand/right.glb')
   }
 
-  box_model = lovr.graphics.newModel('assets/models/test_box.glb')
+  box_model = lovr.graphics.newModel('assets/models/box.glb')
 end
 
 function lovr.update(dt)
