@@ -16,11 +16,14 @@ local function load()
     }
 end
 
-local function render(pass)
+local function render(pass, player_position)
     for hand, model in pairs(hand_models) do
         if lovr.headset.isTracked(hand) then
             lovr.headset.animate(model)
-            pass:draw(model, mat4(lovr.headset.getPose(hand)))
+            -- Whenever pose of hand or head is used, need to account for VR movement
+            local poseRW = mat4(lovr.headset.getPose(hand))
+            local poseVR = mat4(player_position):mul(poseRW)
+            pass:draw(model, poseVR)
         end
     end
 end
