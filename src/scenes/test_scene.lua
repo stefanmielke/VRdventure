@@ -73,7 +73,7 @@ end
 local function on_update(dt)
     world:update(dt)
     
-    if (lovr.headset.wasPressed('left', 'b')) then
+    if (lovr.headset.wasPressed('left', 'y')) then
         next_scene = require 'scenes.test_scene'
         return
     end
@@ -122,5 +122,6 @@ return {
     on_update = on_update,
     on_render = on_render,
     on_unload = on_unload,
+    initial_position = lovr.math.newMat4(),
     name = 'Test Scene'
 }

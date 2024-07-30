@@ -29,9 +29,9 @@ function lovr.update(dt)
         current_scene = next_scene
         next_scene = nil
 
-        current_scene.on_load()
+        current_scene.on_load(motion_module.pose)
 
-        motion_module.reset()
+        motion_module.reset(current_scene.initial_position)
     end
 
     if (lovr.headset.wasPressed('left', 'menu')) then

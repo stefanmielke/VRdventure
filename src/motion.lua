@@ -2,7 +2,6 @@ local motion = {
     pose = lovr.math.newMat4(), -- Transformation in VR initialized to origin (0,0,0) looking down -Z
     thumbstickDeadzone = 0.4,   -- Smaller thumbstick displacements are ignored (too much noise)
     directionFrom = 'head',     -- Movement can be relative to orientation of head or left controller
-    flying = false,
     -- Snap motion parameters
     snapTurnAngle = 2 * math.pi / 12,
     dashDistance = 1.5,
@@ -13,8 +12,8 @@ local motion = {
     walkingSpeed = 4,
 }
 
-function motion.reset()
-    pose = lovr.math.newMat4()
+function motion.reset(initial_pose)
+    motion.pose:set(initial_pose or lovr.math.Mat4())
 end
 
 function motion.smooth(dt)
@@ -71,13 +70,6 @@ end
 
 function motion.update(dt)
     motion.directionFrom = lovr.headset.isDown('left', 'trigger') and 'left' or 'head'
-    if lovr.headset.isDown('left', 'grip') then
-        motion.flying = true
-    elseif lovr.headset.wasReleased('left', 'grip') then
-        motion.flying = false
-        local height = vec3(motion.pose).y
-        motion.pose:translate(0, -height, 0)
-    end
     if lovr.headset.isDown('right', 'grip') then
         motion.snap(dt)
     else

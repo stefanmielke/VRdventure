@@ -1,5 +1,3 @@
-local hands
-
 local function get_models()
     return {
         left = 'assets/models/hand/left.glb',
