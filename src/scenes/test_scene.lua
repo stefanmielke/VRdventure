@@ -58,12 +58,12 @@ local function on_load()
   
     -- Create collider for the lid (dynamic)
     local width, height, depth = box_model:getDimensions()
-    lid_body = world:newCollider(0, height, 0)
+    lid_body = world:newCollider(0, height + .025, 0)
     lid_shape = lovr.physics.newBoxShape(box_lid_model:getDimensions())
     lid_body:addShape(lid_shape)
   
     -- Create a hinge joint for the lid
-    hinge = lovr.physics.newHingeJoint(chest_body, lid_body, 0, height, 0, 0, 0, 1)
+    hinge = lovr.physics.newHingeJoint(chest_body, lid_body, width, height, 0, 0, 0, 1)
     hinge:setLimits(0, math.pi / 2)  -- Limit the hinge to 90 degrees
   
     -- Variables to track the lid state
