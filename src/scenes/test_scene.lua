@@ -1,3 +1,7 @@
+local helper = require 'helper'
+local grababble = require 'grababble'
+local grabber = require 'grabber'
+
 local box_model
 local chest_body
 local chest_shape
@@ -12,6 +16,11 @@ local terrain_shader
 local terrain_collider
 
 local world
+
+local drag = {
+    ['hand/left'] = grabber.new(),
+    ['hand/right'] = grabber.new()
+}
 
 local function on_load()
     -- setup terrain
@@ -45,26 +54,28 @@ local function on_load()
     box_lid_model = lovr.graphics.newModel('assets/models/box_lid.glb')
   
     -- Initialize physics world
-    world = lovr.physics.newWorld(0, -9.81, 0)
+    world = lovr.physics.newWorld()
   
     -- Create terrain collider
     terrain_collider = world:newTerrainCollider(100)
   
-    -- Create collider for the chest (static)
-    chest_body = world:newCollider(0, 0.25, 0)
+    -- Create collider for the chest
+    local box_w, box_h, box_d = box_model:getDimensions()
+    chest_body = world:newBoxCollider(0, 0.25, 0, box_w, box_h, box_d)
+    chest_body:setAutomaticMass(false)
     chest_body:setMass(1)
-    chest_shape = lovr.physics.newBoxShape(box_model:getDimensions())
-    chest_body:addShape(chest_shape)
-  
-    -- Create collider for the lid (dynamic)
-    local width, height, depth = box_model:getDimensions()
-    lid_body = world:newCollider(0, height + .025, 0)
-    lid_shape = lovr.physics.newBoxShape(box_lid_model:getDimensions())
-    lid_body:addShape(lid_shape)
+    grababble.add_new_to_collider(chest_body)
+
+    -- Create collider for the lid
+    local lid_w, lid_h, lid_d = box_lid_model:getDimensions()
+    lid_body = world:newBoxCollider(0, box_h + (lid_h / 2), 0, lid_w, lid_h, lid_d)
+    lid_body:setAutomaticMass(false)
+    lid_body:setMass(.1)
+    grababble.add_new_to_collider(lid_body)
   
     -- Create a hinge joint for the lid
-    hinge = lovr.physics.newHingeJoint(chest_body, lid_body, width, height, 0, 0, 0, 1)
-    hinge:setLimits(0, math.pi / 2)  -- Limit the hinge to 90 degrees
+    -- hinge = lovr.physics.newHingeJoint(chest_body, lid_body, box_w, box_h, 0, 0, 0, 1)
+    -- hinge:setLimits(0, math.pi / 2)  -- Limit the hinge to 90 degrees
   
     -- Variables to track the lid state
     lidOpen = false
@@ -77,6 +88,28 @@ local function on_update(dt)
         next_scene = require 'scenes.test_scene'
         return
     end
+    
+    for _, hand in ipairs(lovr.headset.getHands()) do
+        if lovr.headset.wasPressed(hand, 'trigger') then
+            local x, y, z = lovr.headset.getPosition(hand)
+            local collider = world:querySphere(x, y, z, .01)
+            if (collider) then
+                local grababble = grababble.get_from_collider(collider)
+                if grababble then
+                    local offset = collider:getPosition() - vec3(lovr.headset.getPosition(hand))
+                    drag[hand]:grab(collider, grababble, offset)
+                end
+            end
+        end
+    
+        if drag[hand].collider then
+            grababble.move_collider(hand, drag)
+            
+            if not lovr.headset.isDown(hand, 'trigger') then
+                drag[hand]:release()
+            end
+        end
+    end
 end
 
 function lovr.keypressed(key, scancode, rep)
@@ -88,13 +121,10 @@ end
 
 local function on_render(pass)
     -- Draw the chest
-    -- pass:draw(box_model, 0, 0.25, 0)
-    local x, y, z = chest_body:getPosition()
-    pass:draw(box_model, x, y, z, 1, chest_body:getOrientation())
+    helper.render_model_at_collider(pass, box_model, chest_body)
   
     -- Draw the lid
-    x, y, z = lid_body:getPosition()
-    pass:draw(box_lid_model, x, y, z, 1, lid_body:getOrientation())
+    helper.render_model_at_collider(pass, box_lid_model, lid_body)
   
     -- draw terrain
     pass:setShader(terrain_shader)

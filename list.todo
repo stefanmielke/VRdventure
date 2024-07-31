@@ -1,0 +1,13 @@
+- List of things to do
+
+next:
+    ✔ refactor code to create and add shapes to objects (reduce amount of lines) @done(24-07-31 20:06)
+    ☐ add force when grabbing physics objects to open the chest
+        https://lovr.org/docs/dev/Collider:applyForce
+        D:\dev\lovr\lovr-docs\examples\Interaction\Dragging\main.lua
+        D:\dev\lovr\lovr-docs\examples\Interaction\Dragging_with_Rotation\main.lua
+    ☐ add new sphere for grabbing near the grab button, leaving the current to "act"
+
+fixes:
+    ☐ add offset to fix controller position
+    ☐ add offset to interaction sphere to be near trigger
