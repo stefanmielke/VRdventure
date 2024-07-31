@@ -57,5 +57,7 @@ local function render_scene(pass)
 end
 
 function lovr.draw(pass)
+    current_scene.on_pre_render(pass)
+
     lighting_module.on_render(pass, render_scene)
 end

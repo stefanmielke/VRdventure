@@ -1,5 +1,5 @@
 local z = 0
-local light_pos = lovr.math.newVec3(0, 4.0, z)
+local light_pos = lovr.math.newVec3(0, 100.0, z)
 local light_orthographic = false -- Use orthographic light
 local shadow_map_size = 2048
 

@@ -1,3 +1,6 @@
+local atmo = require 'atmo.atmo'
+local skybox = require('atmo.skybox').new()
+
 local helper = require 'helper'
 local grababble = require 'grababble'
 local grabber = require 'grabber'
@@ -23,6 +26,16 @@ local drag = {
 }
 
 local function on_load()
+    -- skybox
+    atmo.gpu.haze = -0.19 -- controls size of sun's halo
+    atmo.gpu.horizon_offset = 0.8 -- moves the horizon line up or down
+    atmo.gpu.sun_intensity = 40 -- brightness of sun's disk
+    atmo.gpu.sun_sharpness = 0.94  -- controls the halo around the sun
+    atmo.gpu.sun_position = Vec3(-0.48, 0.34, -0.64) -- direction, or normalized position of sun in the sky
+    atmo.gpu.gamma_correction = 2.2 -- gamma for contrast and brightness adjustment
+    atmo.gpu.hue = Vec3(0.04, 0.25, 0.45) -- scattering rgb parameters that affect the overall hue
+    skybox:bake(atmo.draw)
+
     -- setup terrain
     terrain_shader = lovr.graphics.newShader([[
       vec4 lovrmain() {
@@ -119,6 +132,10 @@ function lovr.keypressed(key, scancode, rep)
     end
 end
 
+local function on_pre_render(pass)
+    skybox:draw(pass)
+end
+
 local function on_render(pass)
     -- Draw the chest
     helper.render_model_at_collider(pass, box_model, chest_body)
@@ -150,6 +167,7 @@ end
 return {
     on_load = on_load,
     on_update = on_update,
+    on_pre_render = on_pre_render,
     on_render = on_render,
     on_unload = on_unload,
     initial_position = lovr.math.newMat4(),
