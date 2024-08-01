@@ -26,7 +26,7 @@ local function on_load()
     atmo.gpu.haze = -0.19 -- controls size of sun's halo
     atmo.gpu.horizon_offset = 0.8 -- moves the horizon line up or down
     atmo.gpu.sun_intensity = 40 -- brightness of sun's disk
-    atmo.gpu.sun_sharpness = 0.94  -- controls the halo around the sun
+    atmo.gpu.sun_sharpness = 0.94 -- controls the halo around the sun
     atmo.gpu.sun_position = Vec3(-0.48, 0.34, -0.64) -- direction, or normalized position of sun in the sky
     atmo.gpu.gamma_correction = 2.2 -- gamma for contrast and brightness adjustment
     atmo.gpu.hue = Vec3(0.04, 0.25, 0.45) -- scattering rgb parameters that affect the overall hue
@@ -56,18 +56,22 @@ local function on_load()
   
         return vec4(vec3(value), alpha);
       }
-    ]], { flags = { highp = true } })
+    ]], {
+        flags = {
+            highp = true
+        }
+    })
     lovr.graphics.setBackgroundColor(.05, .05, .05)
 
     box_model = lovr.graphics.newModel('assets/models/box.glb')
     box_lid_model = lovr.graphics.newModel('assets/models/box_lid.glb')
-  
+
     -- Initialize physics world
     world = lovr.physics.newWorld()
-  
+
     -- Create terrain collider
     terrain_collider = world:newTerrainCollider(100)
-  
+
     -- Create collider for the chest
     local box_w, box_h, box_d = box_model:getDimensions()
     chest_body = world:newBoxCollider(0, 0.25, 0, box_w, box_h, box_d)
@@ -81,7 +85,7 @@ local function on_load()
     lid_body:setAutomaticMass(false)
     lid_body:setMass(.1)
     grababble.add_new_to_collider(lid_body)
-  
+
     -- Create a hinge joint for the lid
     -- hinge = lovr.physics.newHingeJoint(chest_body, lid_body, box_w, box_h, 0, 0, 0, 1)
     -- hinge:setLimits(0, math.pi / 2)  -- Limit the hinge to 90 degrees
@@ -89,12 +93,12 @@ end
 
 local function on_update(dt)
     world:update(dt)
-    
+
     if (lovr.headset.wasPressed('left', 'y')) then
         scene_manager.set_next_scene('test_scene')
         return
     end
-    
+
     for _, hand in ipairs(lovr.headset.getHands()) do
         if not hands.data[hand].grabber.collider and lovr.headset.isDown(hand, 'trigger') then
             local x, y, z = hands.data[hand].global_pose:getPosition()
@@ -103,16 +107,16 @@ local function on_update(dt)
                 local grababble = grababble.get_from_collider(collider)
                 if grababble then
                     local hand_pose = mat4(hands.data[hand].global_pose)
-                    
+
                     local offset = hand_pose:invert():mul(mat4(collider:getPose()))
                     hands.data[hand].grabber:grab(collider, grababble, offset)
                 end
             end
         end
-    
+
         if hands.data[hand].grabber.collider then
             grababble.move_collider(hand, hands.data[hand].grabber)
-            
+
             if not lovr.headset.isDown(hand, 'trigger') then
                 hands.data[hand].grabber:release()
             end
@@ -134,10 +138,10 @@ end
 local function on_render(pass)
     -- Draw the chest
     helper.render_model_at_collider(pass, box_model, chest_body)
-  
+
     -- Draw the lid
     helper.render_model_at_collider(pass, box_lid_model, lid_body)
-  
+
     -- draw terrain
     pass:setShader(terrain_shader)
     pass:plane(0, 0, 0, 100, 100, -math.pi / 2, 1, 0, 0)
@@ -147,14 +151,14 @@ local function on_unload()
     world:release()
     box_model:release()
     chest_body:release()
-    
+
     box_lid_model:release()
     lid_body:release()
 
     if hinge then
         hinge:release()
     end
-    
+
     terrain_shader:release()
     terrain_collider:release()
 end

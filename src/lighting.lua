@@ -107,8 +107,8 @@ local function render_lighting_pass(draw)
 
     if lovr.headset then
         for i = 1, lovr.headset.getViewCount() do
-        lighting_pass:setViewPose(i, lovr.headset.getViewPose(i))
-        lighting_pass:setProjection(i, lovr.headset.getViewAngles(i))
+            lighting_pass:setViewPose(i, lovr.headset.getViewPose(i))
+            lighting_pass:setProjection(i, lovr.headset.getViewAngles(i))
         end
     else
         local t = lovr.timer.getTime()
@@ -126,9 +126,9 @@ local function render_lighting_pass(draw)
 
     lighting_pass:setColor(1, 1, 1, 1)
     lighting_pass:sphere(light_pos, 0.1)
-    end
+end
 
-    local function debug_passes(pass)
+local function debug_passes(pass)
     pass:setDepthWrite(false)
 
     if debug_render_from_light then
@@ -136,53 +136,67 @@ local function render_lighting_pass(draw)
     else
         pass:fill(render_texture)
         if debug_show_shadow_map then
-        -- Render shadow map in overlay
-        local width, height = lovr.system.getWindowDimensions()
-        pass:setViewport(0, 0, width / 4, height / 4)
-        pass:fill(shadow_map_texture)
+            -- Render shadow map in overlay
+            local width, height = lovr.system.getWindowDimensions()
+            pass:setViewport(0, 0, width / 4, height / 4)
+            pass:fill(shadow_map_texture)
         end
     end
 end
 
 local function lighting_load()
-  shader = lighting_shader()
-  lovr.graphics.setBackgroundColor(0x4782B3)
+    shader = lighting_shader()
+    lovr.graphics.setBackgroundColor(0x4782B3)
 
-  local shadow_map_format = debug_render_from_light and 'rgba8' or 'd32f'
+    local shadow_map_format = debug_render_from_light and 'rgba8' or 'd32f'
 
-  shadow_map_texture = lovr.graphics.newTexture(shadow_map_size, shadow_map_size, {
-    format = shadow_map_format,
-    linear = false,
-    mipmaps = false
-  })
+    shadow_map_texture = lovr.graphics.newTexture(shadow_map_size, shadow_map_size, {
+        format = shadow_map_format,
+        linear = false,
+        mipmaps = false
+    })
 
-  shadow_map_sampler = lovr.graphics.newSampler({ wrap = 'clamp' })
+    shadow_map_sampler = lovr.graphics.newSampler({
+        wrap = 'clamp'
+    })
 
-  if lovr.headset then
-    local width, height = lovr.headset.getDisplayDimensions()
-    local layers = lovr.headset.getViewCount()
-    render_texture = lovr.graphics.newTexture(width, height, layers, { mipmaps = false })
-  else
-    local width, height = lovr.system.getWindowDimensions()
-    render_texture = lovr.graphics.newTexture(width, height, 1, { mipmaps = false })
-  end
+    if lovr.headset then
+        local width, height = lovr.headset.getDisplayDimensions()
+        local layers = lovr.headset.getViewCount()
+        render_texture = lovr.graphics.newTexture(width, height, layers, {
+            mipmaps = false
+        })
+    else
+        local width, height = lovr.system.getWindowDimensions()
+        render_texture = lovr.graphics.newTexture(width, height, 1, {
+            mipmaps = false
+        })
+    end
 
-  if debug_render_from_light then
-    shadow_map_pass = lovr.graphics.newPass({ shadow_map_texture, samples = 1 })
-  else
-    shadow_map_pass = lovr.graphics.newPass({ depth = shadow_map_texture, samples = 1 })
-    shadow_map_pass:setClear({ depth = light_orthographic and 1 or 0 })
-  end
+    if debug_render_from_light then
+        shadow_map_pass = lovr.graphics.newPass({
+            shadow_map_texture,
+            samples = 1
+        })
+    else
+        shadow_map_pass = lovr.graphics.newPass({
+            depth = shadow_map_texture,
+            samples = 1
+        })
+        shadow_map_pass:setClear({
+            depth = light_orthographic and 1 or 0
+        })
+    end
 
-  lighting_pass = lovr.graphics.newPass(render_texture)
+    lighting_pass = lovr.graphics.newPass(render_texture)
 end
 
 local function lighting_render(pass, render_scene_fn)
-  render_shadow_map(render_scene_fn)
-  render_lighting_pass(render_scene_fn)
-  debug_passes(pass)
+    render_shadow_map(render_scene_fn)
+    render_lighting_pass(render_scene_fn)
+    debug_passes(pass)
 
-  return lovr.graphics.submit({ shadow_map_pass, lighting_pass, pass })
+    return lovr.graphics.submit({shadow_map_pass, lighting_pass, pass})
 end
 
 return {

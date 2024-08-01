@@ -46,7 +46,7 @@ local function render(pass)
             pass:setColor(1, 1, 1, 1)
 
             local x, y, z = data[hand].global_pose:getPosition()
-            pass:sphere(x, y, z, .01)            
+            pass:sphere(x, y, z, .01)
         end
     end
 end
@@ -55,5 +55,5 @@ return {
     data = data,
     load = load,
     update = update,
-    render = render,
+    render = render
 }

@@ -1,7 +1,7 @@
 local motion = {
     pose = lovr.math.newMat4(), -- Transformation in VR initialized to origin (0,0,0) looking down -Z
-    thumbstickDeadzone = 0.4,   -- Smaller thumbstick displacements are ignored (too much noise)
-    directionFrom = 'head',     -- Movement can be relative to orientation of head or left controller
+    thumbstickDeadzone = 0.4, -- Smaller thumbstick displacements are ignored (too much noise)
+    directionFrom = 'head', -- Movement can be relative to orientation of head or left controller
     -- Snap motion parameters
     snapTurnAngle = 2 * math.pi / 12,
     dashDistance = 1.5,
@@ -9,7 +9,7 @@ local motion = {
     thumbstickCooldown = 0,
     -- Smooth motion parameters
     turningSpeed = 2 * math.pi * 1 / 6,
-    walkingSpeed = 4,
+    walkingSpeed = 4
 }
 
 function motion.reset(initial_pose)
@@ -32,7 +32,7 @@ function motion.smooth(dt)
         end
         -- Smooth strafe movement
         if math.abs(x) > motion.thumbstickDeadzone then
-            local strafeVector = quat(-math.pi / 2, 0,1,0):mul(vec3(direction))
+            local strafeVector = quat(-math.pi / 2, 0, 1, 0):mul(vec3(direction))
             motion.pose:translate(strafeVector * x * motion.walkingSpeed * dt)
         end
         -- Smooth Forward/backward movement
