@@ -1,4 +1,4 @@
-local lighting_module = require 'lighting'
+local lighting_module = require 'lighting.simple_lighting'
 local hands = require 'interaction.hands'
 local motion = require 'locomotion.motion'
 local scene_manager = require 'scenes.scene_manager'
