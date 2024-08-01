@@ -20,10 +20,11 @@ local function get_from_collider(collider)
 end
 
 local function move_collider_(grababble, collider, offset, hand)
-    local handPosition = vec3(lovr.headset.getPosition(hand))
+    local poseRW = mat4(lovr.headset.getPose(hand))
+    local handPosition = mat4(motion.pose):mul(poseRW)
     
     if (grababble.grab_type == 'kinetic') then
-        collider:setPosition(handPosition + offset)
+        collider:setPosition(vec3(handPosition:getPosition()) + offset)
     end
 end
 

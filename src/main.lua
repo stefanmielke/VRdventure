@@ -1,6 +1,7 @@
 local lighting_module = require 'lighting'
 local hands_module = require 'hands'
-local motion_module = require 'motion'
+
+motion = require 'motion'
 
 local current_scene
 
@@ -29,9 +30,9 @@ function lovr.update(dt)
         current_scene = next_scene
         next_scene = nil
 
-        current_scene.on_load(motion_module.pose)
+        current_scene.on_load(motion.pose)
 
-        motion_module.reset(current_scene.initial_position)
+        motion.reset(current_scene.initial_position)
     end
 
     if (lovr.headset.wasPressed('left', 'menu')) then
@@ -39,7 +40,7 @@ function lovr.update(dt)
         return
     end
 
-    motion_module.update(dt)
+    motion.update(dt)
 
     current_scene.on_update(dt)
 end
@@ -47,9 +48,9 @@ end
 local function render_scene(pass)
     pass:push()
 
-    pass:transform(mat4(motion_module.pose):invert())
+    pass:transform(mat4(motion.pose):invert())
 
-    hands_module.render(pass, mat4(motion_module.pose));
+    hands_module.render(pass, mat4(motion.pose));
 
     current_scene.on_render(pass)
 

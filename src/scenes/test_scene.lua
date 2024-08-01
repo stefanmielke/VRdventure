@@ -89,9 +89,6 @@ local function on_load()
     -- Create a hinge joint for the lid
     -- hinge = lovr.physics.newHingeJoint(chest_body, lid_body, box_w, box_h, 0, 0, 0, 1)
     -- hinge:setLimits(0, math.pi / 2)  -- Limit the hinge to 90 degrees
-  
-    -- Variables to track the lid state
-    lidOpen = false
 end
 
 local function on_update(dt)
@@ -103,13 +100,17 @@ local function on_update(dt)
     end
     
     for _, hand in ipairs(lovr.headset.getHands()) do
-        if lovr.headset.wasPressed(hand, 'trigger') then
-            local x, y, z = lovr.headset.getPosition(hand)
+        if not drag[hand].collider and lovr.headset.isDown(hand, 'trigger') then
+            local poseRW = mat4(lovr.headset.getPose(hand))
+            local x, y, z = mat4(motion.pose):mul(poseRW):getPosition()
             local collider = world:querySphere(x, y, z, .01)
             if (collider) then
                 local grababble = grababble.get_from_collider(collider)
                 if grababble then
-                    local offset = collider:getPosition() - vec3(lovr.headset.getPosition(hand))
+                    local poseRW = mat4(lovr.headset.getPose(hand))
+                    local handPosition = vec3(mat4(motion.pose):mul(poseRW):getPosition())
+                    
+                    local offset = vec3(collider:getPosition()) - handPosition
                     drag[hand]:grab(collider, grababble, offset)
                 end
             end
