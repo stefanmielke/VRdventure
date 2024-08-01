@@ -3,7 +3,6 @@ local skybox = require('atmo.skybox').new()
 
 local helper = require 'helper'
 local grababble = require 'interaction.grababble'
-local grabber = require 'interaction.grabber'
 local hands = require 'interaction.hands'
 
 local scene_manager = require 'scenes.scene_manager'
