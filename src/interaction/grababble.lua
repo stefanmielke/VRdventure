@@ -22,9 +22,9 @@ end
 local function move_collider_(grababble, collider, offset, hand_pose)
 
     if (grababble.grab_type == 'kinetic') then
-        local newPose = hand_pose * offset
-        local x, y, z = newPose:getPosition()
-        local a, ax, ay, az = newPose:getOrientation()
+        local new_pose = hand_pose * offset
+        local x, y, z = new_pose:getPosition()
+        local a, ax, ay, az = new_pose:getOrientation()
         collider:setPose(x, y, z, a, ax, ay, az)
     end
 end

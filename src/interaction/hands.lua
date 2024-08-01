@@ -33,8 +33,8 @@ end
 
 local function update_model()
     for hand, _ in pairs(data) do
-        local poseRW = mat4(lovr.headset.getPose(hand))
-        data[hand].global_pose = mat4(motion.pose):mul(poseRW)
+        local pose_rw = mat4(lovr.headset.getPose(hand))
+        data[hand].global_pose = mat4(motion.pose):mul(pose_rw)
     end
 end
     

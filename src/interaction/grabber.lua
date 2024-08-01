@@ -4,7 +4,7 @@ local grabber = {
     collider = nil,
     grababble = nil,
     offset = lovr.math.newMat4(),
-    wasKinematic = false
+    was_kinematic = false
 }
 
 local function new()
@@ -16,14 +16,14 @@ function grabber.grab(grabber, collider, grababble, offset)
     grabber.grababble = grababble
     grabber.offset:set(offset)
 
-    grabber.wasKinematic = collider:isKinematic()
+    grabber.was_kinematic = collider:isKinematic()
     collider:setKinematic(true)
 end
 
 function grabber.release(grabber)
     grabber.collider:setLinearVelocity(0, 0, 0)
     grabber.collider:setAngularVelocity(0, 0, 0)
-    if not grabber.wasKinematic then
+    if not grabber.was_kinematic then
         grabber.collider:setKinematic(false)
     end
 

@@ -1,3 +1,14 @@
+-- scene needs to have:
+-- {
+--     on_load = on_load, -- called when loading the scene
+--     on_update = on_update, -- called once per frame (also called right after changing scenes). if it changes scenes, will call 'on_new_scene_callback' (if not nil) with 'initial_position'
+--     on_pre_render = on_pre_render, -- called before rendering anything else (in case you need to render something before applying lighting, eg.: skybox)
+--     on_render = on_render, -- called once per frame after 'on_pre_render'
+--     on_unload = on_unload, -- called when unloading the scene (so you can unload resources)
+--     initial_position = lovr.math.newMat4(), -- initial position for the player
+--     name = 'Test Scene' -- name of the scene (optional)
+-- }
+
 local current_scene = {
     data = nil
 }
