@@ -24,7 +24,10 @@ local function move_collider_(grababble, collider, offset, hand)
     local handPosition = mat4(motion.pose):mul(poseRW)
     
     if (grababble.grab_type == 'kinetic') then
-        collider:setPosition(vec3(handPosition:getPosition()) + offset)
+        local newPose = mat4(handPosition) * offset
+        local x, y, z = newPose:getPosition()
+        local a, ax, ay, az = newPose:getOrientation()
+        collider:setPose(x, y, z, a, ax, ay, az)
     end
 end
 

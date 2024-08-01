@@ -105,10 +105,9 @@ local function on_update(dt)
             if (collider) then
                 local grababble = grababble.get_from_collider(collider)
                 if grababble then
-                    local poseRW = mat4(lovr.headset.getPose(hand))
-                    local handPosition = vec3(mat4(motion.pose):mul(poseRW):getPosition())
+                    local handPosition = mat4(motion.pose):mul(poseRW)
                     
-                    local offset = vec3(collider:getPosition()) - handPosition
+                    local offset = handPosition:invert():mul(mat4(collider:getPose()))
                     drag[hand]:grab(collider, grababble, offset)
                 end
             end

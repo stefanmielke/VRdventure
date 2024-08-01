@@ -3,7 +3,7 @@ local helper = require 'helper'
 local grabber = {
     collider = nil,
     grababble = nil,
-    offset = lovr.math.newVec3(),
+    offset = lovr.math.newMat4(),
     wasKinematic = false
 }
 
