@@ -8,7 +8,7 @@ next:
     ✔ remove globals: https://stackoverflow.com/questions/24327452/declaring-global-variable-inside-a-function-in-lua#24328555 @done(24-08-01 11:18)
     ✔ show solid sphere when colliding (to know it can be grabbed) @done(24-08-01 11:39)
     ✔ rename 'lighting' to 'simple_lighting' and move to 'lighting' folder @done(24-08-01 13:48)
-    ☐ add joint when grabbing using type 'physics'
+    ✔ add joint when grabbing using type 'physics' @done(24-08-01 20:59)
     ☐ add new sphere for grabbing near the grab button, leaving the current to "act"
     ☐ configure button to grab
 
