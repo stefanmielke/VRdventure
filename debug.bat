@@ -1,1 +1,1 @@
-lovr\windows\lovr.exe --console src
+lovr\windows\lovr.exe --console -w src
