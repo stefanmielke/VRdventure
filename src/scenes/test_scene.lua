@@ -7,11 +7,9 @@ local grabber = require 'grabber'
 
 local box_model
 local chest_body
-local chest_shape
 
 local box_lid_model
 local lid_body
-local lid_shape
 
 local hinge
 
@@ -153,13 +151,13 @@ local function on_unload()
     world:release()
     box_model:release()
     chest_body:release()
-    chest_shape:release()
     
     box_lid_model:release()
     lid_body:release()
-    lid_shape:release()
-    
-    hinge:release()
+
+    if hinge then
+        hinge:release()
+    end
     
     terrain_shader:release()
     terrain_collider:release()
