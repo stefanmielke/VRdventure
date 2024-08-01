@@ -1,3 +1,5 @@
+local config = require 'config'
+
 local motion = require 'locomotion.motion'
 
 local grabber = require 'interaction.grabber'
@@ -68,7 +70,7 @@ local function update_interaction(dt, world)
 
         if data[hand].grabber.collider then
             grababble.move_collider(data[hand].global_pose, data[hand].grabber)
-            
+
             if not lovr.headset.isDown(hand, 'trigger') then
                 data[hand].grabber:release(vec3(data[hand].velocity))
             end
@@ -90,17 +92,19 @@ local function render(pass)
             local x, y, z = values.global_pose:getPosition()
             pass:sphere(x, y, z, .01)
 
-            if values.grabber.hand_temp_joint then
-                local x1, y1, z1, x2, y2, z2 = values.grabber.hand_temp_joint:getAnchors()
+            if config.debug.show then
+                if values.grabber.hand_temp_joint then
+                    local x1, y1, z1, x2, y2, z2 = values.grabber.hand_temp_joint:getAnchors()
 
-                pass:setColor(1, 0, 0, 1)
-                pass:sphere(x1, y1, z1, .01)
-                
-                pass:setColor(0, 1, 0, 1)
-                pass:sphere(x2, y2, z2, .01)
-                
-                pass:setColor(0, 0, 1, 1)
-                pass:line(x1, y1, z1, x2, y2, z2)
+                    pass:setColor(1, 0, 0, 1)
+                    pass:sphere(x1, y1, z1, .01)
+
+                    pass:setColor(0, 1, 0, 1)
+                    pass:sphere(x2, y2, z2, .01)
+
+                    pass:setColor(0, 0, 1, 1)
+                    pass:line(x1, y1, z1, x2, y2, z2)
+                end
             end
 
             pass:setColor(1, 1, 1, 1)
