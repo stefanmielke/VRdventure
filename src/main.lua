@@ -40,6 +40,7 @@ function lovr.update(dt)
         return
     end
 
+    hands_module.update()
     motion.update(dt)
 
     current_scene.on_update(dt)
@@ -50,7 +51,7 @@ local function render_scene(pass)
 
     pass:transform(mat4(motion.pose):invert())
 
-    hands_module.render(pass, mat4(motion.pose));
+    hands_module.render(pass);
 
     current_scene.on_render(pass)
 

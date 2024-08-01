@@ -18,11 +18,6 @@ local terrain_collider
 
 local world
 
-local drag = {
-    ['hand/left'] = grabber.new(),
-    ['hand/right'] = grabber.new()
-}
-
 local function on_load()
     -- skybox
     atmo.gpu.haze = -0.19 -- controls size of sun's halo
@@ -98,26 +93,25 @@ local function on_update(dt)
     end
     
     for _, hand in ipairs(lovr.headset.getHands()) do
-        if not drag[hand].collider and lovr.headset.isDown(hand, 'trigger') then
-            local poseRW = mat4(lovr.headset.getPose(hand))
-            local x, y, z = mat4(motion.pose):mul(poseRW):getPosition()
+        if not hands[hand].grabber.collider and lovr.headset.isDown(hand, 'trigger') then
+            local x, y, z = hands[hand].global_pose:getPosition()
             local collider = world:querySphere(x, y, z, .01)
             if (collider) then
                 local grababble = grababble.get_from_collider(collider)
                 if grababble then
-                    local handPosition = mat4(motion.pose):mul(poseRW)
+                    local hand_pose = mat4(hands[hand].global_pose)
                     
-                    local offset = handPosition:invert():mul(mat4(collider:getPose()))
-                    drag[hand]:grab(collider, grababble, offset)
+                    local offset = hand_pose:invert():mul(mat4(collider:getPose()))
+                    hands[hand].grabber:grab(collider, grababble, offset)
                 end
             end
         end
     
-        if drag[hand].collider then
-            grababble.move_collider(hand, drag)
+        if hands[hand].grabber.collider then
+            grababble.move_collider(hand, hands[hand].grabber)
             
             if not lovr.headset.isDown(hand, 'trigger') then
-                drag[hand]:release()
+                hands[hand].grabber:release()
             end
         end
     end
