@@ -6,7 +6,7 @@ local grabber = {
     offset = lovr.math.newMat4(),
     was_kinematic = false,
 
-    hand_temp_collider = nil,
+    hand_collider = nil,
     hand_temp_joint = nil
 }
 
@@ -27,12 +27,8 @@ function grabber.grab(grabber, collider, grababble, hand_pose, world)
     elseif grabber.grababble.grab_type == 'physical' then
         grabber.was_kinematic = collider:isKinematic()
 
-        grabber.hand_temp_collider = world:newSphereCollider(vec3(hand_pose:getPosition()), .01)
-        grabber.hand_temp_collider:setKinematic(true)
-        grabber.hand_temp_collider:setSensor(true)
-
-        grabber.hand_temp_joint = lovr.physics.newWeldJoint(grabber.hand_temp_collider, collider)
-        -- grabber.hand_temp_joint = lovr.physics.newDistanceJoint(grabber.hand_temp_collider, collider,
+        grabber.hand_temp_joint = lovr.physics.newWeldJoint(grabber.hand_collider, collider)
+        -- grabber.hand_temp_joint = lovr.physics.newDistanceJoint(grabber.hand_collider, collider,
         --     vec3(hand_pose:getPosition()), vec3(hand_pose:getPosition()))
         -- grabber.hand_temp_joint:setLimits(0, 0)
     end
@@ -48,9 +44,6 @@ function grabber.release(grabber, velocity)
         grabber.hand_temp_joint:destroy()
         grabber.hand_temp_joint:release()
         grabber.hand_temp_joint = nil
-        grabber.hand_temp_collider:destroy()
-        grabber.hand_temp_collider:release()
-        grabber.hand_temp_collider = nil
     end
 
     if not grabber.was_kinematic then

@@ -24,17 +24,15 @@ local function get_from_collider(collider)
 end
 
 local function move_collider_(grabber, hand_pose)
-    if (grabber.grababble.grab_type == 'kinetic') then
+    if grabber.grababble.grab_type == 'kinetic' then
         local new_pose = hand_pose * grabber.offset
         local x, y, z = new_pose:getPosition()
         local a, ax, ay, az = new_pose:getOrientation()
         grabber.collider:setPose(x, y, z, a, ax, ay, az)
-    elseif (grabber.grababble.grab_type == 'physical') then
-        if grabber.hand_temp_collider then
-            local x, y, z = hand_pose:getPosition()
-            local a, ax, ay, az = hand_pose:getOrientation()
-            grabber.hand_temp_collider:setPose(x, y, z, a, ax, ay, az)
-        end
+    elseif grabber.grababble.grab_type == 'physical' then
+        local x, y, z = hand_pose:getPosition()
+        local a, ax, ay, az = hand_pose:getOrientation()
+        grabber.hand_collider:setPose(x, y, z, a, ax, ay, az)
     end
 end
 

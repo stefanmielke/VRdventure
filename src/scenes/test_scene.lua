@@ -68,6 +68,8 @@ local function on_load()
     -- Initialize physics world
     world = lovr.physics.newWorld()
 
+    hands.set_world(world)
+
     -- Create terrain collider
     terrain_collider = world:newTerrainCollider(100)
 
@@ -122,6 +124,8 @@ local function on_render(pass)
 end
 
 local function on_unload()
+    hands.remove_world()
+
     world:release()
     box_model:release()
     chest_body:release()

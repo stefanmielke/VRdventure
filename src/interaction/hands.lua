@@ -37,6 +37,24 @@ local function load()
     }
 end
 
+local function set_world(world)
+    for _, values in pairs(data) do
+        values.grabber.hand_collider = world:newSphereCollider(vec3(values.global_pose:getPosition()), .01)
+        values.grabber.hand_collider:setKinematic(true)
+        values.grabber.hand_collider:setSensor(true)
+    end
+end
+
+local function remove_world()
+    for _, values in pairs(data) do
+        if values.grabber.hand_collider then
+            values.grabber.hand_collider:destroy()
+            values.grabber.hand_collider:release()
+            values.grabber.hand_collider = nil
+        end
+    end
+end
+
 local function update_model()
     for hand, values in pairs(data) do
         local pose_rw = mat4(lovr.headset.getPose(hand))
@@ -115,6 +133,8 @@ end
 return {
     data = data,
     load = load,
+    set_world = set_world,
+    remove_world = remove_world,
     update_model = update_model,
     update_interaction = update_interaction,
     render = render
