@@ -1,6 +1,5 @@
 local lighting_module = require 'lighting'
-local hands_module = require 'interaction.hands'
-
+local hands = require 'interaction.hands'
 local motion = require 'locomotion.motion'
 
 local current_scene
@@ -14,7 +13,7 @@ function lovr.load()
 
     lighting_module.on_load()
 
-    hands_module.load()
+    hands.load()
 
     next_scene = require 'scenes.test_scene'
 end
@@ -40,7 +39,7 @@ function lovr.update(dt)
         return
     end
 
-    hands_module.update()
+    hands.update()
     motion.update(dt)
 
     current_scene.on_update(dt)
@@ -51,7 +50,7 @@ local function render_scene(pass)
 
     pass:transform(mat4(motion.pose):invert())
 
-    hands_module.render(pass);
+    hands.render(pass);
 
     current_scene.on_render(pass)
 

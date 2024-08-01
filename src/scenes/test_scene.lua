@@ -4,6 +4,7 @@ local skybox = require('atmo.skybox').new()
 local helper = require 'helper'
 local grababble = require 'interaction.grababble'
 local grabber = require 'interaction.grabber'
+local hands = require 'interaction.hands'
 
 local box_model
 local chest_body
@@ -93,25 +94,25 @@ local function on_update(dt)
     end
     
     for _, hand in ipairs(lovr.headset.getHands()) do
-        if not hands[hand].grabber.collider and lovr.headset.isDown(hand, 'trigger') then
-            local x, y, z = hands[hand].global_pose:getPosition()
+        if not hands.data[hand].grabber.collider and lovr.headset.isDown(hand, 'trigger') then
+            local x, y, z = hands.data[hand].global_pose:getPosition()
             local collider = world:querySphere(x, y, z, .01)
             if (collider) then
                 local grababble = grababble.get_from_collider(collider)
                 if grababble then
-                    local hand_pose = mat4(hands[hand].global_pose)
+                    local hand_pose = mat4(hands.data[hand].global_pose)
                     
                     local offset = hand_pose:invert():mul(mat4(collider:getPose()))
-                    hands[hand].grabber:grab(collider, grababble, offset)
+                    hands.data[hand].grabber:grab(collider, grababble, offset)
                 end
             end
         end
     
-        if hands[hand].grabber.collider then
-            grababble.move_collider(hand, hands[hand].grabber)
+        if hands.data[hand].grabber.collider then
+            grababble.move_collider(hand, hands.data[hand].grabber)
             
             if not lovr.headset.isDown(hand, 'trigger') then
-                hands[hand].grabber:release()
+                hands.data[hand].grabber:release()
             end
         end
     end
