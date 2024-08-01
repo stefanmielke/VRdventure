@@ -66,7 +66,7 @@ local function on_load()
     box_lid_model = lovr.graphics.newModel('assets/models/box_lid.glb')
 
     -- Initialize physics world
-    world = lovr.physics.newWorld()
+    world = lovr.physics.newWorld({tags = {'grab'}})
 
     hands.set_world(world)
 
@@ -86,6 +86,7 @@ local function on_load()
     grababble.add_to_collider(lid_body, lid_grab)
 
     -- Create a hinge joint for the lid
+    -- hinge = lovr.physics.newWeldJoint(chest_body, lid_body)
     -- hinge = lovr.physics.newHingeJoint(chest_body, lid_body, box_w, box_h, 0, 0, 0, 1)
     -- hinge:setLimits(0, math.pi / 2)  -- Limit the hinge to 90 degrees
 end

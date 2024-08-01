@@ -69,12 +69,13 @@ local function update_interaction(dt, world)
         data[hand].velocity:set(data[hand].global_pose:getPosition())
         data[hand].velocity:sub(data[hand].previous_global_pose:getPosition())
         data[hand].velocity:mul(1 / dt)
+        
+        local x, y, z = data[hand].global_pose:getPosition()
+        local a, ax, ay, az = data[hand].global_pose:getOrientation()
+        data[hand].grabber.hand_collider:setPose(x, y, z, a, ax, ay, az)
 
         if not data[hand].grabber.collider then
-            local x, y, z = data[hand].global_pose:getPosition()
-            local a, ax, ay, az = data[hand].global_pose:getOrientation()
-
-            local collider, _, _, _, _, _, _, _ = world:overlapShape(data[hand].grabber.hand_collider:getShapes()[1], x, y, z, a, ax, ay, az)
+            local collider, _, _, _, _, _, _, _ = world:overlapShape(data[hand].grabber.hand_collider:getShapes()[1], x, y, z, a, ax, ay, az, 'grab')
             if (collider) then
                 data[hand].collider_color = {1, 1, 1, 1}
                 if lovr.headset.isDown(hand, 'trigger') then

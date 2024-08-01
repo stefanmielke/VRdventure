@@ -12,6 +12,7 @@ end
 
 local function add_to_collider(collider, grababble)
     collider:setUserData(grababble)
+    collider:setTag('grab')
 end
 
 local function add_new_to_collider(collider)
@@ -30,9 +31,7 @@ local function move_collider_(grabber, hand_pose)
         local a, ax, ay, az = new_pose:getOrientation()
         grabber.collider:setPose(x, y, z, a, ax, ay, az)
     elseif grabber.grababble.grab_type == 'physical' then
-        local x, y, z = hand_pose:getPosition()
-        local a, ax, ay, az = hand_pose:getOrientation()
-        grabber.hand_collider:setPose(x, y, z, a, ax, ay, az)
+        -- movement is done on the "hand" module, nothing to be done here yet
     end
 end
 
