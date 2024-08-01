@@ -2,8 +2,8 @@ local atmo = require 'atmo.atmo'
 local skybox = require('atmo.skybox').new()
 
 local helper = require 'helper'
-local grababble = require 'grababble'
-local grabber = require 'grabber'
+local grababble = require 'interaction.grababble'
+local grabber = require 'interaction.grabber'
 
 local box_model
 local chest_body

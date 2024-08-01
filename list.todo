@@ -3,7 +3,7 @@
 next:
     ✔ refactor code to create and add shapes to objects (reduce amount of lines) @done(24-07-31 20:06)
     ✔ refactor code to drag objects @done(24-07-31 22:52)
-    ☐ move hand modules to 'interactive' folder
+    ✔ move hand modules to 'interaction' folder @done(24-08-01 10:38)
     ☐ move motion module to 'locomotion'
     ☐ remove globals: https://stackoverflow.com/questions/24327452/declaring-global-variable-inside-a-function-in-lua#24328555
     ☐ show red ball when colliding (to know it can be grabbed)

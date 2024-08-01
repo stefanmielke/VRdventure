@@ -1,5 +1,5 @@
 local lighting_module = require 'lighting'
-local hands_module = require 'hands'
+local hands_module = require 'interaction.hands'
 
 motion = require 'motion'
 

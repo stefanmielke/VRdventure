@@ -1,4 +1,4 @@
-local grabber = require 'grabber'
+local grabber = require 'interaction.grabber'
 
 local function get_controller_data()
     return {
