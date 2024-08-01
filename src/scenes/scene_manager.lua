@@ -11,7 +11,7 @@ end
 
 local function update(dt, on_new_scene_callback)
     if next_scene.data then
-        io.write('Changing scene: \'', next_scene.data.name or 'no_name', '\'\n')
+        print('Changing scene: \'', next_scene.data.name or 'no_name', '\'')
 
         if current_scene.data then
             current_scene.data.on_unload()

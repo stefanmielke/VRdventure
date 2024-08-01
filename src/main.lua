@@ -4,7 +4,7 @@ local motion = require 'locomotion.motion'
 local scene_manager = require 'scenes.scene_manager'
 
 local function debug_info()
-    io.write('Device: ', lovr.headset.getName(), '\n')
+    print('Device:', lovr.headset.getName())
 end
 
 function lovr.load()
