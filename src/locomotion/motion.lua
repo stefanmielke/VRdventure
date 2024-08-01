@@ -30,6 +30,7 @@ function motion.smooth(dt)
     if lovr.headset.isTracked('left') then
         local x, y = lovr.headset.getAxis('left', 'thumbstick')
         local direction = quat(lovr.headset.getOrientation(motion.direction_from)):direction()
+        direction.y = 0
 
         -- Smooth strafe movement
         if math.abs(x) > motion.thumbstick_deadzone then
