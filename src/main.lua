@@ -1,8 +1,7 @@
 local lighting_module = require 'lighting'
 local hands = require 'interaction.hands'
 local motion = require 'locomotion.motion'
-
-local current_scene
+local scene_manager = require 'scenes.scene_manager'
 
 local function debug_info()
     io.write('Device: ', lovr.headset.getName(), '\n')
@@ -15,25 +14,14 @@ function lovr.load()
 
     hands.load()
 
-    next_scene = require 'scenes.test_scene'
+    scene_manager.set_next_scene('test_scene')
+end
+
+local function on_scene_change(initial_position)
+    motion.reset(initial_position)
 end
 
 function lovr.update(dt)
-    if next_scene then
-        io.write('Changing scene: \'', next_scene.name or 'no_name', '\'\n')
-
-        if current_scene then
-            current_scene.on_unload()
-        end
-
-        current_scene = next_scene
-        next_scene = nil
-
-        current_scene.on_load(motion.pose)
-
-        motion.reset(current_scene.initial_position)
-    end
-
     if (lovr.headset.wasPressed('left', 'menu')) then
         lovr.event.quit()
         return
@@ -42,7 +30,7 @@ function lovr.update(dt)
     hands.update()
     motion.update(dt)
 
-    current_scene.on_update(dt)
+    scene_manager.update(dt, on_scene_change)
 end
 
 local function render_scene(pass)
@@ -52,13 +40,13 @@ local function render_scene(pass)
 
     hands.render(pass);
 
-    current_scene.on_render(pass)
+    scene_manager.render(pass)
 
     pass:pop()
 end
 
 function lovr.draw(pass)
-    current_scene.on_pre_render(pass)
+    scene_manager.pre_render(pass)
 
     lighting_module.on_render(pass, render_scene)
 end

@@ -6,6 +6,8 @@ local grababble = require 'interaction.grababble'
 local grabber = require 'interaction.grabber'
 local hands = require 'interaction.hands'
 
+local scene_manager = require 'scenes.scene_manager'
+
 local box_model
 local chest_body
 
@@ -89,7 +91,7 @@ local function on_update(dt)
     world:update(dt)
     
     if (lovr.headset.wasPressed('left', 'y')) then
-        next_scene = require 'scenes.test_scene'
+        scene_manager.set_next_scene('test_scene')
         return
     end
     
@@ -120,7 +122,7 @@ end
 
 function lovr.keypressed(key, scancode, rep)
     if (key == 'b') then
-        next_scene = require 'scenes.test_scene'
+        scene_manager.set_next_scene('test_scene')
         return
     end
 end
