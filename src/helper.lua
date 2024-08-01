@@ -1,6 +1,23 @@
+local config = require 'config'
+
 local function render_model_at_collider(pass, model, collider)
+    pass:setColor(1, 1, 1, 1)
     local x, y, z = collider:getPosition()
-    pass:draw(model, x, y, z, 1, collider:getOrientation())
+    local a, ax, ay, az = collider:getOrientation()
+    pass:draw(model, x, y, z, 1, a, ax, ay, az)
+
+    if (config.debug.show) then
+        pass:setColor(1, 0, 0, 1)
+        pass:setWireframe(false)
+        local minx, maxx, miny, maxy, minz, maxz = collider:getAABB()
+        pass:line(minx, miny, minz, maxx, miny, minz, maxx, maxy, minz, minx, maxy, minz, minx, miny, minz)
+        pass:line(minx, miny, maxz, maxx, miny, maxz, maxx, maxy, maxz, minx, maxy, maxz, minx, miny, maxz)
+        pass:line(minx, miny, minz, minx, miny, maxz)
+        pass:line(minx, maxy, minz, minx, maxy, maxz)
+        pass:line(maxx, miny, minz, maxx, miny, maxz)
+        pass:line(maxx, maxy, minz, maxx, maxy, maxz)
+        pass:setWireframe(false)
+    end
 end
 
 local function deep_copy(o, seen)

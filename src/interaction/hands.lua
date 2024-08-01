@@ -58,10 +58,7 @@ local function update_interaction(dt, world)
                 if lovr.headset.isDown(hand, 'trigger') then
                     local grababble = grababble.get_from_collider(collider)
                     if grababble then
-                        local hand_pose = mat4(data[hand].global_pose)
-
-                        local offset = hand_pose:invert():mul(mat4(collider:getPose()))
-                        data[hand].grabber:grab(collider, grababble, offset)
+                        data[hand].grabber:grab(collider, grababble, mat4(data[hand].global_pose), world)
                     end
                 end
             else
@@ -71,7 +68,7 @@ local function update_interaction(dt, world)
 
         if data[hand].grabber.collider then
             grababble.move_collider(data[hand].global_pose, data[hand].grabber)
-
+            
             if not lovr.headset.isDown(hand, 'trigger') then
                 data[hand].grabber:release(vec3(data[hand].velocity))
             end
@@ -92,6 +89,19 @@ local function render(pass)
             pass:setColor(values.collider_color)
             local x, y, z = values.global_pose:getPosition()
             pass:sphere(x, y, z, .01)
+
+            if values.grabber.hand_temp_joint then
+                local x1, y1, z1, x2, y2, z2 = values.grabber.hand_temp_joint:getAnchors()
+
+                pass:setColor(1, 0, 0, 1)
+                pass:sphere(x1, y1, z1, .01)
+                
+                pass:setColor(0, 1, 0, 1)
+                pass:sphere(x2, y2, z2, .01)
+                
+                pass:setColor(0, 0, 1, 1)
+                pass:line(x1, y1, z1, x2, y2, z2)
+            end
 
             pass:setColor(1, 1, 1, 1)
         end

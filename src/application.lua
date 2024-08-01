@@ -3,6 +3,8 @@ local hands = require 'interaction.hands'
 local motion = require 'locomotion.motion'
 local scene_manager = require 'scenes.scene_manager'
 
+local config = require 'config'
+
 local function debug_info()
     print('Device:', lovr.headset.getName())
 end
@@ -21,10 +23,23 @@ local function on_scene_change(initial_position)
     motion.reset(initial_position)
 end
 
+function lovr.keypressed(key, scancode, rep)
+    if (key == 'b') then
+        scene_manager.set_next_scene('test_scene')
+        return
+    end
+    if (key == '0') then
+        config.debug.show = not config.debug.show
+    end
+end
+
 local function update(dt)
     if (lovr.headset.wasPressed('left', 'menu')) then
         lovr.event.quit()
         return
+    end
+    if (lovr.headset.wasPressed('right', 'b')) then
+        config.debug.show = not config.debug.show
     end
 
     hands.update_model()

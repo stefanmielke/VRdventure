@@ -76,6 +76,7 @@ local function on_load()
     chest_body = world:newBoxCollider(0, 0.25, 0, box_w, box_h, box_d)
     chest_body:setAutomaticMass(false)
     chest_body:setMass(1)
+    chest_body:setSleepingAllowed(false)
     grababble.add_new_to_collider(chest_body)
 
     -- Create collider for the lid
@@ -83,7 +84,10 @@ local function on_load()
     lid_body = world:newBoxCollider(0, box_h + (lid_h / 2), 0, lid_w, lid_h, lid_d)
     lid_body:setAutomaticMass(false)
     lid_body:setMass(.1)
-    grababble.add_new_to_collider(lid_body)
+    lid_body:setSleepingAllowed(false)
+    local lid_grab = grababble.new()
+    lid_grab.grab_type = 'physical'
+    grababble.add_to_collider(lid_body, lid_grab)
 
     -- Create a hinge joint for the lid
     -- hinge = lovr.physics.newHingeJoint(chest_body, lid_body, box_w, box_h, 0, 0, 0, 1)
@@ -99,13 +103,6 @@ local function on_update(dt)
     end
 
     hands.update_interaction(dt, world)
-end
-
-function lovr.keypressed(key, scancode, rep)
-    if (key == 'b') then
-        scene_manager.set_next_scene('test_scene')
-        return
-    end
 end
 
 local function on_pre_render(pass)
