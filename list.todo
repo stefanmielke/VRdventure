@@ -3,8 +3,7 @@
 next:
     ✔ refactor code to create and add shapes to objects (reduce amount of lines) @done(24-07-31 20:06)
     ✔ refactor code to drag objects @done(24-07-31 22:52)
-    ☐ add force when grabbing physics objects to open the chest
-        https://lovr.org/docs/dev/Collider:applyForce
+    ☐ add joint when grabbing using type 'physics'
     ☐ add new sphere for grabbing near the grab button, leaving the current to "act"
 
 fixes:
