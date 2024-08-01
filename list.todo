@@ -3,8 +3,56 @@
 next:
     ✔ refactor code to create and add shapes to objects (reduce amount of lines) @done(24-07-31 20:06)
     ✔ refactor code to drag objects @done(24-07-31 22:52)
+    ☐ move hand modules to 'interactive' folder
+    ☐ move motion module to 'locomotion'
+    ☐ remove globals: https://stackoverflow.com/questions/24327452/declaring-global-variable-inside-a-function-in-lua#24328555
+    ☐ show red ball when colliding (to know it can be grabbed)
     ☐ add joint when grabbing using type 'physics'
     ☐ add new sphere for grabbing near the grab button, leaving the current to "act"
+
+events:
+    grabber:
+        ☐ on_can_grab
+        ☐ on_start_grab
+        ☐ on_release_grab
+        ☐ on_is_grabbing
+    grababble:
+        ☐ on_grabbed
+        ☐ on_released
+        ☐ on_is_grabbed
+    motion:
+        ☐ on_start_move
+        ☐ on_stop_move
+        ☐ on_is_moving
+        ☐ on_is_stopped
+
+vr playground:
+    ☐ ladder and climb spots
+    ☐ door
+    ☐ drawer
+    ☐ closet
+    ☐ sliding door
+    ☐ weapon
+    ☐ 2 hand weapon
+    ☐ 2 hands hold
+    ☐ hand swap
+    ☐ chest with lock/unlock
+    ☐ backpack (no gravity inside)
+    ☐ handles (like joysticks and switches)
+    ☐ throw things (add velocity)
+    ☐ grenades (to remove the pin)
+
+locomotion:
+    ☐ locomotion change (tp, smooth, snap or continuous turn)
+    ☐ locomotion with collision
+    ☐ jump
+    ☐ moving platforms
+    ☐ dark scene when going inside invalid geometry (like walls)
+
+future:
+    ☐ make collider on points for more precision
+    ☐ ui attached to the hand (multiple attach points)
+    ☐ hands
 
 fixes:
     ☐ add offset to fix controller position
