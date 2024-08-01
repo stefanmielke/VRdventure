@@ -59,12 +59,12 @@ function motion.snap(dt)
     if lovr.headset.isTracked('left') then
         local x, y = lovr.headset.getAxis('left', 'thumbstick')
         if math.abs(y) > motion.thumbstick_deadzone and motion.thumbstick_cooldown < 0 then
-            local moveVector = quat(lovr.headset.getOrientation('head')):direction()
+            local move_vector = quat(lovr.headset.getOrientation('head')):direction()
             if not motion.flying then
-                moveVector.y = 0
+                move_vector.y = 0
             end
-            moveVector:mul(y / math.abs(y) * motion.dash_distance)
-            motion.pose:translate(moveVector)
+            move_vector:mul(y / math.abs(y) * motion.dash_distance)
+            motion.pose:translate(move_vector)
             motion.thumbstick_cooldown = motion.thumbstick_cooldown_time
         end
     end

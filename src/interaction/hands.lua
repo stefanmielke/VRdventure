@@ -21,30 +21,40 @@ local function load()
         grabber = grabber.new(),
         model = lovr.graphics.newModel(controller_data.models.left),
         global_pose = lovr.math.newMat4(),
-        collider_color = { 1, 1, 1, 1}
+        previous_global_pose = lovr.math.newMat4(),
+        collider_color = {1, 1, 1, 1},
+        velocity = lovr.math.newVec3()
     }
     data['hand/right'] = {
         grabber = grabber.new(),
         model = lovr.graphics.newModel(controller_data.models.right),
         global_pose = lovr.math.newMat4(),
-        collider_color = { 1, 1, 1, 1}
+        previous_global_pose = lovr.math.newMat4(),
+        collider_color = {1, 1, 1, 1},
+        velocity = lovr.math.newVec3()
     }
 end
 
 local function update_model()
-    for hand, _ in pairs(data) do
+    for hand, values in pairs(data) do
         local pose_rw = mat4(lovr.headset.getPose(hand))
-        data[hand].global_pose = mat4(motion.pose):mul(pose_rw)
+
+        values.previous_global_pose:set(values.global_pose)
+        values.global_pose:set(motion.pose):mul(pose_rw)
     end
 end
-    
+
 local function update_interaction(dt, world)
     for _, hand in ipairs(lovr.headset.getHands()) do
+        data[hand].velocity:set(data[hand].global_pose:getPosition())
+        data[hand].velocity:sub(data[hand].previous_global_pose:getPosition())
+        data[hand].velocity:mul(1 / dt)
+
         if not data[hand].grabber.collider then
             local x, y, z = data[hand].global_pose:getPosition()
             local collider = world:querySphere(x, y, z, .01)
             if (collider) then
-                data[hand].collider_color = { 1, 1, 1, 1}
+                data[hand].collider_color = {1, 1, 1, 1}
                 if lovr.headset.isDown(hand, 'trigger') then
                     local grababble = grababble.get_from_collider(collider)
                     if grababble then
@@ -55,7 +65,7 @@ local function update_interaction(dt, world)
                     end
                 end
             else
-                data[hand].collider_color = { 1, 1, 1, .1}
+                data[hand].collider_color = {1, 1, 1, .1}
             end
         end
 
@@ -63,7 +73,7 @@ local function update_interaction(dt, world)
             grababble.move_collider(data[hand].global_pose, data[hand].grabber)
 
             if not lovr.headset.isDown(hand, 'trigger') then
-                data[hand].grabber:release()
+                data[hand].grabber:release(vec3(data[hand].velocity))
             end
         end
     end

@@ -20,8 +20,8 @@ function grabber.grab(grabber, collider, grababble, offset)
     collider:setKinematic(true)
 end
 
-function grabber.release(grabber)
-    grabber.collider:setLinearVelocity(0, 0, 0)
+function grabber.release(grabber, velocity)
+    grabber.collider:setLinearVelocity(velocity:mul(grabber.grababble.velocity_mult_on_release))
     grabber.collider:setAngularVelocity(0, 0, 0)
     if not grabber.was_kinematic then
         grabber.collider:setKinematic(false)

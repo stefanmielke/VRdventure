@@ -10,6 +10,7 @@ next:
     ☐ add joint when grabbing using type 'physics'
     ☐ add new sphere for grabbing near the grab button, leaving the current to "act"
     ☐ configure button to grab
+    ☐ rename 'lighting' to 'simple_lighting' and move to 'lighting' folder
 
 events:
     grabber:
