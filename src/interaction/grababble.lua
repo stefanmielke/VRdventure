@@ -1,5 +1,4 @@
 local helper = require 'helper'
-local hands = require 'interaction.hands'
 
 -- grab_type = 'kinetic', 'physical'
 local grababble = {
@@ -20,19 +19,18 @@ local function get_from_collider(collider)
     return data.is_grababble and data or nil
 end
 
-local function move_collider_(grababble, collider, offset, hand)
-    local handPosition = mat4(hands.data[hand].global_pose)
+local function move_collider_(grababble, collider, offset, hand_pose)
 
     if (grababble.grab_type == 'kinetic') then
-        local newPose = handPosition * offset
+        local newPose = hand_pose * offset
         local x, y, z = newPose:getPosition()
         local a, ax, ay, az = newPose:getOrientation()
         collider:setPose(x, y, z, a, ax, ay, az)
     end
 end
 
-local function move_collider(hand, grabber)
-    move_collider_(grabber.grababble, grabber.collider, grabber.offset, hand)
+local function move_collider(hand_pose, grabber)
+    move_collider_(grabber.grababble, grabber.collider, grabber.offset, mat4(hand_pose))
 end
 
 return {

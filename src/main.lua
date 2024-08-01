@@ -27,7 +27,7 @@ function lovr.update(dt)
         return
     end
 
-    hands.update()
+    hands.update_model()
     motion.update(dt)
 
     scene_manager.update(dt, on_scene_change)

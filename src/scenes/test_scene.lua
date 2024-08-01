@@ -99,29 +99,7 @@ local function on_update(dt)
         return
     end
 
-    for _, hand in ipairs(lovr.headset.getHands()) do
-        if not hands.data[hand].grabber.collider and lovr.headset.isDown(hand, 'trigger') then
-            local x, y, z = hands.data[hand].global_pose:getPosition()
-            local collider = world:querySphere(x, y, z, .01)
-            if (collider) then
-                local grababble = grababble.get_from_collider(collider)
-                if grababble then
-                    local hand_pose = mat4(hands.data[hand].global_pose)
-
-                    local offset = hand_pose:invert():mul(mat4(collider:getPose()))
-                    hands.data[hand].grabber:grab(collider, grababble, offset)
-                end
-            end
-        end
-
-        if hands.data[hand].grabber.collider then
-            grababble.move_collider(hand, hands.data[hand].grabber)
-
-            if not lovr.headset.isDown(hand, 'trigger') then
-                hands.data[hand].grabber:release()
-            end
-        end
-    end
+    hands.update_interaction(dt, world)
 end
 
 function lovr.keypressed(key, scancode, rep)
