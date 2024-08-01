@@ -1,4 +1,5 @@
 local grabber = require 'interaction.grabber'
+local motion = require 'locomotion.motion'
 
 local function get_controller_data()
     return {

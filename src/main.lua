@@ -1,7 +1,7 @@
 local lighting_module = require 'lighting'
 local hands_module = require 'interaction.hands'
 
-motion = require 'locomotion.motion'
+local motion = require 'locomotion.motion'
 
 local current_scene
 
