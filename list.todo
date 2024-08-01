@@ -5,7 +5,7 @@ next:
     ✔ refactor code to drag objects @done(24-07-31 22:52)
     ✔ move hand modules to 'interaction' folder @done(24-08-01 10:38)
     ✔ move motion module to 'locomotion' @done(24-08-01 10:39)
-    ☐ remove globals: https://stackoverflow.com/questions/24327452/declaring-global-variable-inside-a-function-in-lua#24328555
+    ✔ remove globals: https://stackoverflow.com/questions/24327452/declaring-global-variable-inside-a-function-in-lua#24328555 @done(24-08-01 11:18)
     ☐ show red ball when colliding (to know it can be grabbed)
     ☐ add joint when grabbing using type 'physics'
     ☐ add new sphere for grabbing near the grab button, leaving the current to "act"
