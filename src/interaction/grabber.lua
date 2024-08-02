@@ -15,7 +15,7 @@ local function new()
 end
 
 function grabber.grab(grabber, collider, grababble, hand_pose, world)
-    local offset = hand_pose:invert():mul(mat4(collider:getPose()))
+    local offset = mat4(hand_pose):invert():mul(mat4(collider:getPose()))
 
     grabber.collider = collider
     grabber.grababble = grababble
@@ -27,10 +27,12 @@ function grabber.grab(grabber, collider, grababble, hand_pose, world)
     elseif grabber.grababble.grab_type == 'physical' then
         grabber.was_kinematic = collider:isKinematic()
 
-        grabber.hand_temp_joint = lovr.physics.newWeldJoint(grabber.hand_collider, collider)
-        -- grabber.hand_temp_joint = lovr.physics.newDistanceJoint(grabber.hand_collider, collider,
-        --     vec3(hand_pose:getPosition()), vec3(hand_pose:getPosition()))
-        -- grabber.hand_temp_joint:setLimits(0, 0)
+        if grababble.grab_joint == 'fixed' then
+            grabber.hand_temp_joint = lovr.physics.newWeldJoint(grabber.hand_collider, collider)
+        elseif grababble.grab_joint == 'distance' then
+            local x, y, z = hand_pose:getPosition()
+            grabber.hand_temp_joint = lovr.physics.newDistanceJoint(grabber.hand_collider, collider, x, y, z, x, y, z)
+        end
     end
 end
 

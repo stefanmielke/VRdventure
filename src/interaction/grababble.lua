@@ -3,11 +3,22 @@ local helper = require 'helper'
 local grababble = {
     is_grababble = true, -- if you can grab the object
     grab_type = 'kinetic', -- 'kinetic' (collides with everything), 'physical' (pull the object around when moving, good for joints)
-    velocity_mult_on_release = 1 -- velocity to multiply by the hand velocity when released
+    velocity_mult_on_release = 1, -- velocity to multiply by the hand velocity when released
+    grab_joint = 'fixed' -- 'fixed' (allows for rotation), 'distance' (should be used for joints that can be moved around, but have a set rotation)
 }
 
-local function new()
-    return helper.deep_copy(grababble)
+local function new(override_values)
+    local new_grababble = helper.deep_copy(grababble)
+
+    if override_values then
+        new_grababble.is_grababble = override_values.is_grababble or new_grababble.is_grababble
+        new_grababble.grab_type = override_values.grab_type or new_grababble.grab_type
+        new_grababble.velocity_mult_on_release = override_values.velocity_mult_on_release or
+                                                     new_grababble.velocity_mult_on_release
+        new_grababble.grab_joint = override_values.grab_joint or new_grababble.grab_joint
+    end
+
+    return new_grababble
 end
 
 local function add_to_collider(collider, grababble)
@@ -15,8 +26,8 @@ local function add_to_collider(collider, grababble)
     collider:setTag('grab')
 end
 
-local function add_new_to_collider(collider)
-    add_to_collider(collider, new())
+local function add_new_to_collider(collider, override_values)
+    add_to_collider(collider, new(override_values))
 end
 
 local function get_from_collider(collider)
