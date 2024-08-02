@@ -1,7 +1,6 @@
 local config = require 'config'
 
 local function render_model_at_collider(pass, model, collider)
-    pass:setColor(1, 1, 1, 1)
     local x, y, z = collider:getPosition()
     local a, ax, ay, az = collider:getOrientation()
     pass:draw(model, x, y, z, 1, a, ax, ay, az)
@@ -17,6 +16,7 @@ local function render_model_at_collider(pass, model, collider)
         pass:line(maxx, miny, minz, maxx, miny, maxz)
         pass:line(maxx, maxy, minz, maxx, maxy, maxz)
         pass:setWireframe(false)
+        pass:setColor(1, 1, 1, 1)
     end
 end
 
