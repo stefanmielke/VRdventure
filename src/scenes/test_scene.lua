@@ -69,15 +69,7 @@ local function on_load()
     box_lid_model = lovr.graphics.newModel('assets/models/box_lid.glb')
     apple_model = lovr.graphics.newModel('assets/models/apple.glb')
 
-    local apple_model_data = apple_model:getData()
-    print(apple_model_data:getNodeCount())
-
-    apple_meshes = {}
-    apple_meshes_indexes = apple_model_data:getNodeMeshes(4) -- this line changes the node to render
-    for k, v in pairs(apple_meshes_indexes) do
-        local mesh = apple_model:getMesh(v)
-        table.insert(apple_meshes, mesh)
-    end
+    apple_meshes = helper.get_meshes_from_model_nodes(apple_model)
 
     -- Initialize physics world
     world = lovr.physics.newWorld({
@@ -134,11 +126,10 @@ end
 local function on_render(pass)
     helper.render_model_at_collider(pass, box_model, chest_body)
     helper.render_model_at_collider(pass, box_lid_model, lid_body)
-    helper.render_model_at_collider(pass, apple_model, apple_body)
 
-    for _, v in pairs(apple_meshes) do
-        pass:draw(v, -2, 1, 0)
-        helper.render_model_at_collider(pass, v, apple2_body)
+    for k2, mesh in pairs(apple_meshes.cabbage) do
+        -- pass:draw(mesh, -2, 1, i / 2)
+        helper.render_model_at_collider(pass, mesh, apple2_body)
     end
 
     -- draw terrain

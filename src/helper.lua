@@ -1,5 +1,37 @@
 local config = require 'config'
 
+local function get_meshes_from_model_node(model, index)
+    local model_data = model:getData()
+
+    local meshes = {}
+    local meshes_indexes = model_data:getNodeMeshes(index)
+    for k, v in pairs(meshes_indexes) do
+        local mesh = model:getMesh(v)
+        table.insert(meshes, mesh)
+    end
+
+    return meshes
+end
+
+local function get_meshes_from_model_nodes(model)
+    local model_meshes = {}
+
+    local node_count = model:getNodeCount()
+    for i = 1, node_count, 1 do
+        local node_name = model:getNodeName(i)
+        print(node_name)
+        if node_name then
+            model_meshes[node_name] = get_meshes_from_model_node(model, i)
+        end
+    end
+
+    return model_meshes
+end
+
+local function render_node_meshes(meshes, ...)
+    
+end
+
 local function render_model_at_collider(pass, model, collider)
     local x, y, z = collider:getPosition()
     local a, ax, ay, az = collider:getOrientation()
@@ -45,6 +77,8 @@ local function deep_copy(o, seen)
 end
 
 return {
+    get_meshes_from_model_node = get_meshes_from_model_node,
+    get_meshes_from_model_nodes = get_meshes_from_model_nodes,
     render_model_at_collider = render_model_at_collider,
     deep_copy = deep_copy
 }
