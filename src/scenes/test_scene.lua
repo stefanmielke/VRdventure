@@ -75,7 +75,7 @@ local function on_load()
 
     -- Create collider for the chest
     local box_w, box_h, box_d = box_model:getDimensions()
-    chest_body = world:newBoxCollider(0, 0.25, 0, box_w, box_h, box_d)
+    chest_body = world:newConvexCollider(0, 0.25, 0, box_model)
     grababble.add_new_to_collider(chest_body)
 
     -- Create collider for the lid
