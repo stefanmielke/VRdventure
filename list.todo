@@ -11,6 +11,8 @@ next:
     ✔ add joint when grabbing using type 'physics' @done(24-08-01 20:59)
     ☐ add new sphere for grabbing near the grab button, leaving the current to "act"
     ☐ configure button to grab
+    ☐ try attaching the model to the collider userdata so we can iterate over those and render as needed (does it even make sense?)
+    ☐ check the model structure to understand if we can split models on the same glb file
 
 events:
     grabber:
@@ -45,7 +47,7 @@ vr playground:
     ☐ grenades (to remove the pin)
 
 locomotion:
-    ☐ locomotion change (tp, smooth, snap or continuous turn)
+    ✔ locomotion change (tp, smooth, snap or continuous turn) @done(24-08-02 14:44)
     ☐ locomotion with collision
     ☐ jump
     ☐ moving platforms
@@ -59,3 +61,4 @@ future:
 fixes:
     ☐ add offset to fix controller position
     ☐ add offset to interaction sphere to be near trigger
+    ☐ fix turn angle on locomotion
