@@ -22,7 +22,13 @@ local function new(override_values)
 end
 
 local function add_to_collider(collider, grababble)
-    collider:setUserData(grababble)
+    local current_data = collider:getUserData()
+    if not current_data then
+        current_data = {}
+    end
+    current_data.grababble = grababble
+
+    collider:setUserData(current_data)
     collider:setTag('grab')
 end
 
@@ -31,7 +37,7 @@ local function add_new_to_collider(collider, override_values)
 end
 
 local function get_from_collider(collider)
-    local data = collider:getUserData()
+    local data = collider:getUserData().grababble
     return data.is_grababble and data or nil
 end
 

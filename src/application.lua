@@ -16,7 +16,7 @@ local function load()
 
     hands.load()
 
-    scene_manager.set_next_scene('test_scene')
+    scene_manager.set_next_scene(config.application.start_scene)
 end
 
 local function on_scene_change(initial_position)
@@ -25,7 +25,7 @@ end
 
 function lovr.keypressed(key, scancode, rep)
     if (key == 'b') then
-        scene_manager.set_next_scene('test_scene')
+        scene_manager.set_next_scene(config.application.start_scene) -- TODO: change this to be the current scene
         return
     end
     if (key == '0') then

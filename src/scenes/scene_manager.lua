@@ -15,6 +15,7 @@ local current_scene = {
 local next_scene = {
     data = nil
 }
+local tracked_objects = {}
 
 local function set_next_scene(name)
     next_scene.data = require('scenes.' .. name)
@@ -26,6 +27,7 @@ local function update(dt, on_new_scene_callback)
 
         if current_scene.data then
             current_scene.data.on_unload()
+            tracked_objects = {}
         end
 
         current_scene.data = next_scene.data
@@ -49,9 +51,14 @@ local function render(pass)
     current_scene.data.on_render(pass)
 end
 
+local function add_tracked_object(object)
+    table.insert(tracked_objects, object)
+end
+
 return {
     set_next_scene = set_next_scene,
     update = update,
     pre_render = pre_render,
-    render = render
+    render = render,
+    add_tracked_object = add_tracked_object
 }
