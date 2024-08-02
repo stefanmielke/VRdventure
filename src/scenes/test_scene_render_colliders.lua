@@ -141,5 +141,5 @@ return {
     on_render = on_render,
     on_unload = on_unload,
     initial_position = lovr.math.newMat4(),
-    name = 'Test Scene Single Model'
+    name = 'Test Scene Render From Colliders'
 }
