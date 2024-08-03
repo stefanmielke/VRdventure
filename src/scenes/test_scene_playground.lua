@@ -24,10 +24,12 @@ local function on_load()
     world = lovr.physics.newWorld({
         tags = {'grab'}
     })
+    
+    terrain_collider = world:newTerrainCollider(100)
 
     hands.set_world(world)
 
-    scene_loader.load_scene_complete_split_files(world, 'test_scene')
+    scene_loader.load_scene_complete_single_file(world, 'test_scene_playground')
 
     -- Create a hinge joint for the lid
     -- local hinge = lovr.physics.newHingeJoint(chest_body, lid_body, box_w / 2, box_h, 0, 0, 0, 1)
@@ -40,7 +42,7 @@ local function on_update(dt)
     world:update(dt)
 
     if (lovr.headset.wasPressed('left', 'y')) then
-        scene_manager.set_next_scene('test_scene_single_model')
+        scene_manager.set_next_scene('test_scene_playground')
         return
     end
 

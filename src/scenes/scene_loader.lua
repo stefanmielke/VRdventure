@@ -91,7 +91,6 @@ local function load_scene_references(path)
     end
 
     local scene_model = lovr.graphics.newModel(path)
-    local scene_json = json.decode(scene_model:getMetadata())
 
     local node_count = scene_model:getNodeCount()
     for i = 1, node_count, 1 do
@@ -111,9 +110,93 @@ local function load_scene_complete_split_files(world, scene_name)
     load_scene_references('assets/scenes/' .. scene_name .. '_ref.glb')
 end
 
+local function load_static_models(world, scene_model, static_root_node_id)
+    local static_node_ids = scene_model:getNodeChildren(static_root_node_id)
+    for _, node_id in pairs(static_node_ids) do
+        local node_name = scene_model:getNodeName(node_id)
+        print(node_name)
+
+        local scene_meshes = model.get_meshes_from_model_node_with_pose(scene_model, node_id)
+        local collider = world:newCollider(0, 0, 0) -- TODO: see need for this to change
+        for _, mesh in pairs(scene_meshes) do
+            for _, mesh2 in pairs(mesh.meshes) do
+                collider:addShape(lovr.physics.newMeshShape(mesh2:getVertices(1, nil), mesh2:getIndices()))
+            end
+        end
+
+        model.add_to_collider(collider, scene_meshes)
+        scene_manager.add_tracked_object(collider)
+    end
+end
+
+local function load_dynamic_models(world, scene_model, static_root_node_id)
+    local scene_json = json.decode(scene_model:getMetadata())
+    local static_node_ids = scene_model:getNodeChildren(static_root_node_id)
+    for _, node_id in pairs(static_node_ids) do
+        local node_name = scene_model:getNodeName(node_id)
+        local scene_meshes = model.get_meshes_from_model_node_with_pose(scene_model, node_id)
+        
+        local i = 1
+        for _, scene_mesh in pairs(scene_meshes) do
+            local meshes = {}
+            for _, mesh in pairs(scene_mesh.meshes) do
+                table.insert(meshes, mesh)
+            end
+            
+            local extra_node = scene_json.nodes[i].extras
+            if extra_node then
+                if extra_node.collision_type and extra_node.collision_type ~= '' then
+                    local x, y, z = scene_mesh.pose:getPosition()
+                    local collider = create_collider(world, nil, x, y, z, extra_node)
+                    if not collider then
+                        break
+                    end
+
+                    create_grababble(collider, extra_node)
+                    model.add_to_collider(collider, meshes)
+                    scene_manager.add_tracked_object(collider)
+                end
+            end
+        end
+        i = i + 1
+    end
+end
+
+local function load_references(world, scene_model, root_node_id)
+    local static_node_ids = scene_model:getNodeChildren(root_node_id)
+    for _, node_id in pairs(static_node_ids) do
+        local node_name = scene_model:getNodeName(node_id)
+        if node_name then
+            local x, y, z, angle, ax, ay, az = scene_model:getNodePose(node_id)
+            local math4 = lovr.math.newMat4()
+            math4:set(x, y, z, angle, ax, ay, az)
+            scene_manager.add_reference_object(node_name, { pose = math4 })
+        end
+    end
+end
+
+local function load_scene_complete_single_file(world, scene_name)
+    local scene_model = lovr.graphics.newModel('assets/scenes/' .. scene_name .. '.glb')
+    
+    local root_node_id = scene_model:getRootNode()
+    local children = scene_model:getNodeChildren(root_node_id)
+    for _, index in pairs(children) do
+        local node_name = scene_model:getNodeName(index)
+        if node_name == 'Static' then
+            -- not working for now
+            -- load_static_models(world, scene_model, index)
+        elseif node_name == 'Dynamic' then
+            load_dynamic_models(world, scene_model, index)
+        elseif node_name == 'References' then
+            load_references(world, scene_model, index)
+        end
+    end
+end
+
 return {
     load_scene = load_scene,
     load_scene_static = load_scene_static,
     load_scene_references = load_scene_references,
-    load_scene_complete_split_files = load_scene_complete_split_files
+    load_scene_complete_split_files = load_scene_complete_split_files,
+    load_scene_complete_single_file = load_scene_complete_single_file
 }

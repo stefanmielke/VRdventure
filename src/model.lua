@@ -24,6 +24,24 @@ local function get_meshes_from_model_node(model, index)
     return meshes
 end
 
+-- TODO: merge this function with 'get_meshes_from_model_node' so both return with pose
+local function get_meshes_from_model_node_with_pose(model, index)
+    local model_meshes = {}
+
+    local node_name = model:getNodeName(index)
+    if node_name then
+        local x, y, z, angle, ax, ay, az = model:getNodePose(index)
+        local math4 = lovr.math.newMat4()
+        math4:set(x, y, z, angle, ax, ay, az)
+        model_meshes[node_name] = {
+            pose = math4,
+            meshes = get_meshes_from_model_node(model, index)
+        }
+    end
+
+    return model_meshes
+end
+
 local function get_meshes_from_model_nodes(model)
     local model_meshes = {}
 
@@ -89,6 +107,7 @@ end
 return {
     add_to_collider = add_to_collider,
     get_meshes_from_model_node = get_meshes_from_model_node,
+    get_meshes_from_model_node_with_pose = get_meshes_from_model_node_with_pose,
     get_meshes_from_model_nodes = get_meshes_from_model_nodes,
     render_model_at_collider = render_model_at_collider,
     render_model_collider = render_model_collider,
