@@ -53,7 +53,16 @@ local function load_scene(world, path)
             table.insert(meshes, mesh)
         end
 
-        local extra_node = scene_json.nodes[i].extras
+        local node_index = 1
+        for _, v in pairs(scene_json.nodes) do
+            if k == v.name then
+                break
+            end
+
+            node_index = node_index + 1
+        end
+
+        local extra_node = scene_json.nodes[node_index].extras
         if extra_node then
             if extra_node.collision_type and extra_node.collision_type ~= '' then
                 local x, y, z = meshes_data.pose:getPosition()
@@ -99,7 +108,9 @@ local function load_scene_references(path)
             local x, y, z, angle, ax, ay, az = scene_model:getNodePose(i)
             local math4 = lovr.math.newMat4()
             math4:set(x, y, z, angle, ax, ay, az)
-            scene_manager.add_reference_object(node_name, { pose = math4 })
+            scene_manager.add_reference_object(node_name, {
+                pose = math4
+            })
         end
     end
 end
@@ -149,15 +160,24 @@ local function load_dynamic_models(world, scene_model, static_root_node_id)
     for _, node_id in pairs(static_node_ids) do
         local node_name = scene_model:getNodeName(node_id)
         local scene_meshes = model.get_meshes_from_model_node_with_pose(scene_model, node_id)
-        
+
         local i = 1
         for _, scene_mesh in pairs(scene_meshes) do
             local meshes = {}
             for _, mesh in pairs(scene_mesh.meshes) do
                 table.insert(meshes, mesh)
             end
-            
-            local extra_node = scene_json.nodes[i].extras
+
+            local node_index = 1
+            for _, v in pairs(scene_json.nodes) do
+                if k == v.name then
+                    break
+                end
+
+                node_index = node_index + 1
+            end
+
+            local extra_node = scene_json.nodes[node_index].extras
             if extra_node then
                 if extra_node.collision_type and extra_node.collision_type ~= '' then
                     local x, y, z = scene_mesh.pose:getPosition()
@@ -184,14 +204,16 @@ local function load_references(world, scene_model, root_node_id)
             local x, y, z, angle, ax, ay, az = scene_model:getNodePose(node_id)
             local math4 = lovr.math.newMat4()
             math4:set(x, y, z, angle, ax, ay, az)
-            scene_manager.add_reference_object(node_name, { pose = math4 })
+            scene_manager.add_reference_object(node_name, {
+                pose = math4
+            })
         end
     end
 end
 
 local function load_scene_complete_single_file(world, scene_name)
     local scene_model = lovr.graphics.newModel('assets/scenes/' .. scene_name .. '.glb')
-    
+
     local root_node_id = scene_model:getRootNode()
     local children = scene_model:getNodeChildren(root_node_id)
     for _, index in pairs(children) do
