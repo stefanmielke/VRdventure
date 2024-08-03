@@ -8,9 +8,6 @@ local hands = require 'interaction.hands'
 
 local scene_manager = require 'scenes.scene_manager'
 
-local apple_model
-local apple_body
-
 local box_model
 local chest_body
 
@@ -68,9 +65,6 @@ local function on_load()
 
     box_model = lovr.graphics.newModel('assets/models/box.glb')
     box_lid_model = lovr.graphics.newModel('assets/models/box_lid.glb')
-    apple_model = lovr.graphics.newModel('assets/models/apple.glb')
-
-    apple_meshes = model.get_meshes_from_model_nodes(apple_model)
 
     -- Initialize physics world
     world = lovr.physics.newWorld({
@@ -81,13 +75,6 @@ local function on_load()
 
     -- Create terrain collider
     terrain_collider = world:newTerrainCollider(100)
-
-    apple_body = world:newConvexCollider(2, 1, 0, apple_model)
-    grababble.add_new_to_collider(apple_body)
-
-    apple2_body = world:newSphereCollider(3, 1, 0, 0.1)
-    grababble.add_new_to_collider(apple2_body)
-
 
     -- Create collider for the chest
     local box_w, box_h, box_d = box_model:getDimensions()
@@ -128,11 +115,6 @@ local function on_render(pass)
     model.render_model_at_collider(pass, box_model, chest_body)
     model.render_model_at_collider(pass, box_lid_model, lid_body)
 
-    for k2, mesh in pairs(apple_meshes.cabbage) do
-        -- pass:draw(mesh, -2, 1, i / 2)
-        model.render_model_at_collider(pass, mesh, apple2_body)
-    end
-
     -- draw terrain
     pass:setShader(terrain_shader)
     pass:plane(0, 0, 0, 100, 100, -math.pi / 2, 1, 0, 0)
@@ -144,9 +126,6 @@ local function on_unload()
     world:release()
     box_model:release()
     chest_body:release()
-
-    apple_model:release()
-    apple_body:release()
 
     box_lid_model:release()
     lid_body:release()
