@@ -34,7 +34,10 @@ local function get_meshes_from_model_nodes(model)
             local x, y, z, angle, ax, ay, az = model:getNodePose(i)
             local math4 = lovr.math.newMat4()
             math4:set(x, y, z, angle, ax, ay, az)
-            model_meshes[node_name] = { pose = math4, meshes = get_meshes_from_model_node(model, i) }
+            model_meshes[node_name] = {
+                pose = math4,
+                meshes = get_meshes_from_model_node(model, i)
+            }
         end
     end
 
@@ -69,12 +72,11 @@ local function render_model_collider(pass, collider)
 
     if type(current_data.model) == 'table' then
         for _, m in pairs(current_data.model) do
-            render_model_at_collider(pass, m, collider) 
+            render_model_at_collider(pass, m, collider)
         end
     else
         render_model_at_collider(pass, current_data.model, collider)
     end
-    
 end
 
 local function render_all_model_from_colliders(pass, world)

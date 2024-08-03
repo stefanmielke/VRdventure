@@ -73,7 +73,7 @@ local function on_load()
 
     local apple2_body = world:newSphereCollider(3, 1, 0, 0.1)
     grababble.add_new_to_collider(apple2_body)
-    model.add_to_collider(apple2_body, apple_meshes.apple)
+    model.add_to_collider(apple2_body, apple_meshes.apple.meshes)
     scene_manager.add_tracked_object(apple2_body)
 
     -- Create collider for the chest
