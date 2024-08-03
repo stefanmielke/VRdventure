@@ -13,7 +13,7 @@ local config = {
         thumbstick_deadzone = 0.4
     },
     application = {
-        start_scene = 'test_scene_single_model'
+        start_scene = 'test_scene_playground'
     }
 }
 
