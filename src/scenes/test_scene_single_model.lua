@@ -27,7 +27,7 @@ local function on_load()
 
     hands.set_world(world)
 
-    scene_loader.load_scene_complete(world, 'test_scene')
+    scene_loader.load_scene_complete_split_files(world, 'test_scene')
 
     -- Create a hinge joint for the lid
     -- local hinge = lovr.physics.newHingeJoint(chest_body, lid_body, box_w / 2, box_h, 0, 0, 0, 1)

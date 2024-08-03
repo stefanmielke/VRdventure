@@ -105,7 +105,7 @@ local function load_scene_references(path)
     end
 end
 
-local function load_scene_complete(world, scene_name)
+local function load_scene_complete_split_files(world, scene_name)
     load_scene(world, 'assets/scenes/' .. scene_name .. '.glb')
     load_scene_static(world, 'assets/scenes/' .. scene_name .. '_static.glb')
     load_scene_references('assets/scenes/' .. scene_name .. '_ref.glb')
@@ -115,5 +115,5 @@ return {
     load_scene = load_scene,
     load_scene_static = load_scene_static,
     load_scene_references = load_scene_references,
-    load_scene_complete = load_scene_complete
+    load_scene_complete_split_files = load_scene_complete_split_files
 }
