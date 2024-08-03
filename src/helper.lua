@@ -22,6 +22,12 @@ local function deep_copy(o, seen)
     return no
 end
 
+local function file_exists(name)
+    local f = io.open(name, "r")
+    return f ~= nil and io.close(f)
+end
+
 return {
-    deep_copy = deep_copy
+    deep_copy = deep_copy,
+    file_exists = file_exists
 }

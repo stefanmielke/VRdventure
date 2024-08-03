@@ -61,12 +61,16 @@ local function on_unload()
     world:release()
 end
 
+local function get_initial_position()
+    return scene_manager.get_reference_object('Spawn').pose
+end
+
 return {
     on_load = on_load,
     on_update = on_update,
     on_pre_render = on_pre_render,
     on_render = on_render,
     on_unload = on_unload,
-    initial_position = lovr.math.newMat4(),
+    initial_position = function() return get_initial_position() end,
     name = 'Test Scene Render From Single Model'
 }
