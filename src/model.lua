@@ -24,7 +24,6 @@ local function get_meshes_from_model_node(model, index)
     return meshes
 end
 
--- TODO: merge this function with 'get_meshes_from_model_node' so both return with pose
 local function get_meshes_from_model_node_with_pose(model, index)
     local model_meshes = {}
 
