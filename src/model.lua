@@ -30,9 +30,11 @@ local function get_meshes_from_model_nodes(model)
     local node_count = model:getNodeCount()
     for i = 1, node_count, 1 do
         local node_name = model:getNodeName(i)
-        print(node_name)
         if node_name then
-            model_meshes[node_name] = get_meshes_from_model_node(model, i)
+            local x, y, z, angle, ax, ay, az = model:getNodePose(i)
+            local math4 = lovr.math.newMat4()
+            math4:set(x, y, z, angle, ax, ay, az)
+            model_meshes[node_name] = { pose = math4, meshes = get_meshes_from_model_node(model, i) }
         end
     end
 
