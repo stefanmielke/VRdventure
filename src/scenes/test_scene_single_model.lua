@@ -5,6 +5,7 @@ local model = require 'model'
 local hands = require 'interaction.hands'
 
 local scene_manager = require 'scenes.scene_manager'
+local scene_loader = require 'scenes.scene_loader'
 
 local world
 
@@ -26,7 +27,7 @@ local function on_load()
 
     hands.set_world(world)
 
-    scene_manager.load_scene_complete(world, 'test_scene')
+    scene_loader.load_scene_complete(world, 'test_scene')
 
     -- Create a hinge joint for the lid
     -- local hinge = lovr.physics.newHingeJoint(chest_body, lid_body, box_w / 2, box_h, 0, 0, 0, 1)
