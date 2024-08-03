@@ -38,9 +38,11 @@ end
 
 function grabber.release(grabber, velocity)
     if grabber.grababble.grab_type == 'kinetic' then
+        grabber.collider:setAwake(true)
         grabber.collider:setLinearVelocity(velocity:mul(grabber.grababble.velocity_mult_on_release))
         grabber.collider:setAngularVelocity(0, 0, 0)
     elseif grabber.grababble.grab_type == 'physical' then
+        grabber.collider:setAwake(true)
         grabber.collider:setLinearVelocity(velocity:mul(grabber.grababble.velocity_mult_on_release))
         grabber.collider:setAngularVelocity(0, 0, 0)
         grabber.hand_temp_joint:destroy()
