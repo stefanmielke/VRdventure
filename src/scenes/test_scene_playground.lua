@@ -24,8 +24,6 @@ local function on_load()
     world = lovr.physics.newWorld({
         tags = {'grab'}
     })
-    
-    terrain_collider = world:newTerrainCollider(100)
 
     hands.set_world(world)
 

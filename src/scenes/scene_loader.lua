@@ -117,15 +117,23 @@ local function load_static_models(world, scene_model, static_root_node_id)
         print(node_name)
 
         local scene_meshes = model.get_meshes_from_model_node_with_pose(scene_model, node_id)
-        local collider = world:newCollider(0, 0, 0) -- TODO: see need for this to change
-        for _, mesh in pairs(scene_meshes) do
-            for _, mesh2 in pairs(mesh.meshes) do
-                collider:addShape(lovr.physics.newMeshShape(mesh2:getVertices(1, nil), mesh2:getIndices()))
-            end
-        end
+        for _, scene_mesh in pairs(scene_meshes) do
+            local collider = world:newCollider(0, 0, 0) -- TODO: see need for this to change
 
-        model.add_to_collider(collider, scene_meshes)
-        scene_manager.add_tracked_object(collider)
+            for _, mesh in pairs(scene_mesh.meshes) do
+                local vertices_table = mesh:getVertices(1, nil)
+                local vertices = {}
+                for _, v in pairs(vertices_table) do
+                    table.insert(vertices, v[1])
+                end
+
+                collider:addShape(lovr.physics.newConvexShape(vertices, mesh:getIndices()))
+                collider:setKinematic(true)
+            end
+
+            model.add_to_collider(collider, scene_mesh.meshes)
+            scene_manager.add_tracked_object(collider)
+        end
     end
 end
 
@@ -183,8 +191,7 @@ local function load_scene_complete_single_file(world, scene_name)
     for _, index in pairs(children) do
         local node_name = scene_model:getNodeName(index)
         if node_name == 'Static' then
-            -- not working for now
-            -- load_static_models(world, scene_model, index)
+            load_static_models(world, scene_model, index)
         elseif node_name == 'Dynamic' then
             load_dynamic_models(world, scene_model, index)
         elseif node_name == 'References' then

@@ -63,9 +63,11 @@ local function get_meshes_from_model_nodes(model)
 end
 
 local function render_model_at_collider(pass, model, collider)
-    local x, y, z = collider:getPosition()
-    local a, ax, ay, az = collider:getOrientation()
-    pass:draw(model, x, y, z, 1, a, ax, ay, az)
+    if model then
+        local x, y, z = collider:getPosition()
+        local a, ax, ay, az = collider:getOrientation()
+        pass:draw(model, x, y, z, 1, a, ax, ay, az)
+    end
 
     if (config.debug.show) then
         pass:setColor(1, 0, 0, 1)
@@ -84,7 +86,7 @@ end
 
 local function render_model_collider(pass, collider)
     local current_data = collider:getUserData()
-    if not current_data or not current_data.model then
+    if not current_data then
         return
     end
 
