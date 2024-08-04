@@ -45,7 +45,13 @@ local function smooth_turn(dt)
 
         -- Smooth horizontal turning
         if math.abs(x) > config.input.thumbstick_deadzone then
-            motion.pose:rotate(-x * motion.turning_speed * dt, 0, 1, 0)
+            local headsetPosition = vec3(lovr.headset.getPosition())
+            local angle = -x * motion.turning_speed * dt
+            local rotationMatrix = mat4():rotate(angle, 0, 1, 0)
+
+            motion.pose:translate(headsetPosition)
+            motion.pose:mul(rotationMatrix)
+            motion.pose:translate(-headsetPosition)
         end
     end
 end
@@ -71,8 +77,14 @@ local function snap_turn(dt)
     if lovr.headset.isTracked(config.locomotion.turn_stick) then
         local x, y = lovr.headset.getAxis(config.locomotion.turn_stick, 'thumbstick')
         if math.abs(x) > config.input.thumbstick_deadzone and motion.thumbstick_cooldown_turn < 0 then
+            local headsetPosition = vec3(lovr.headset.getPosition())
             local angle = -x / math.abs(x) * motion.snap_turn_angle
-            motion.pose:rotate(angle, 0, 1, 0)
+            local rotationMatrix = mat4():rotate(angle, 0, 1, 0)
+
+            motion.pose:translate(headsetPosition)
+            motion.pose:mul(rotationMatrix)
+            motion.pose:translate(-headsetPosition)
+            
             motion.thumbstick_cooldown_turn = motion.thumbstick_cooldown_time_turn
         end
     end
