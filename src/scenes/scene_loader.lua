@@ -38,7 +38,7 @@ end
 
 local function load_scene(world, path)
     if not lovr.filesystem.isFile(path) then
-        print('Load scene failed. File \'' .. path .. '\' not found')
+        print('Warning: Load scene file \'' .. path .. '\' not found')
         return
     end
 
@@ -82,7 +82,7 @@ end
 
 local function load_scene_static(world, path)
     if not lovr.filesystem.isFile(path) then
-        print('Load scene static failed. File \'' .. path .. '\' not found')
+        print('Warning: Load scene static file \'' .. path .. '\' not found')
         return
     end
 
@@ -95,7 +95,7 @@ end
 
 local function load_scene_references(path)
     if not lovr.filesystem.isFile(path) then
-        print('Load scene references failed. File \'' .. path .. '\' not found')
+        print('Warning: Load scene references file \'' .. path .. '\' not found')
         return
     end
 
