@@ -33,7 +33,7 @@ local function on_load()
     -- local hinge = lovr.physics.newHingeJoint(chest_body, lid_body, box_w / 2, box_h, 0, 0, 0, 1)
     -- hinge:setLimits((-math.pi / 3) * 2, math.pi / 2) -- Limit the hinge to 90 degrees
     -- scene_manager.add_tracked_object(hinge)
-    
+
 end
 
 local function on_update(dt)
@@ -62,7 +62,11 @@ local function on_unload()
 end
 
 local function get_initial_position()
-    return scene_manager.get_reference_object('Spawn').pose
+    if scene_manager.get_reference_object('Spawn') then
+        return scene_manager.get_reference_object('Spawn').pose
+    else
+        return lovr.math.newMat4()
+    end
 end
 
 return {
@@ -71,6 +75,8 @@ return {
     on_pre_render = on_pre_render,
     on_render = on_render,
     on_unload = on_unload,
-    initial_position = function() return get_initial_position() end,
+    initial_position = function()
+        return get_initial_position()
+    end,
     name = 'Test Scene Render From Single Model'
 }

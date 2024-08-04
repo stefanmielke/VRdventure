@@ -49,6 +49,7 @@ vr playground:
 locomotion:
     ✔ locomotion change (tp, smooth, snap or continuous turn) @done(24-08-02 14:44)
     ☐ locomotion with collision
+        use capsule collider check every frame (do not create the collider itself) for movement
     ☐ jump
     ☐ moving platforms
     ☐ dark scene when going inside invalid geometry (like walls)

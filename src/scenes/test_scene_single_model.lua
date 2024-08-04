@@ -62,7 +62,11 @@ local function on_unload()
 end
 
 local function get_initial_position()
-    return scene_manager.get_reference_object('Spawn').pose
+    if scene_manager.get_reference_object('Spawn') then
+        return scene_manager.get_reference_object('Spawn').pose
+    else
+        return lovr.math.newMat4()
+    end
 end
 
 return {
