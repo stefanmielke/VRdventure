@@ -1,6 +1,6 @@
 local lighting_module = require 'lighting.simple_lighting'
 local hands = require 'interaction.hands'
-local motion = require 'locomotion.motion'
+local motion = require 'locomotion.complex_motion'
 local scene_manager = require 'scenes.scene_manager'
 
 local config = require 'config'
@@ -33,7 +33,7 @@ function lovr.keypressed(key, scancode, rep)
     end
 end
 
-local function update(dt)
+local function update(dt, world)
     if (lovr.headset.wasPressed('left', 'menu')) then
         lovr.event.quit()
         return
@@ -43,7 +43,7 @@ local function update(dt)
     end
 
     hands.update_model()
-    motion.update(dt)
+    motion.update(dt, world)
 
     scene_manager.update(dt, on_scene_change)
 end

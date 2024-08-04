@@ -1,6 +1,6 @@
 local config = require 'config'
 
-local motion = require 'locomotion.motion'
+local motion = require 'locomotion.complex_motion'
 
 local grabber = require 'interaction.grabber'
 local grababble = require 'interaction.grababble'

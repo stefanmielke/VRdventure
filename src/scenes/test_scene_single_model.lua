@@ -4,6 +4,8 @@ local skybox = require('atmo.skybox').new()
 local model = require 'model'
 local hands = require 'interaction.hands'
 
+local motion = require 'locomotion.complex_motion'
+
 local scene_manager = require 'scenes.scene_manager'
 local scene_loader = require 'scenes.scene_loader'
 
@@ -26,6 +28,7 @@ local function on_load()
     })
 
     hands.set_world(world)
+    motion.set_world(world)
 
     scene_loader.load_scene_complete_split_files(world, 'test_scene')
 
