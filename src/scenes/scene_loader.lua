@@ -64,7 +64,6 @@ local function load_scene(world, path)
         end
 
         local extras_node = scene_json.nodes[node_index].extras
-        print(extras_node)
         if extras_node and extras_node.object_type then
             local object = objects[extras_node.object_type]
             if object.collision.type and object.collision.type ~= '' then
@@ -130,11 +129,9 @@ local function load_static_models(world, scene_model, static_root_node_id)
     local static_node_ids = scene_model:getNodeChildren(static_root_node_id)
     for _, node_id in pairs(static_node_ids) do
         local node_name = scene_model:getNodeName(node_id)
-        print(node_name)
 
         local scene_meshes = model.get_meshes_from_model_node_with_pose(scene_model, node_id)
         for _, scene_mesh in pairs(scene_meshes) do
-            print('scene', scene_mesh)
             local x, y, z = scene_mesh.pose:getPosition()
             local collider = world:newCollider(x, y, z)
 
@@ -142,7 +139,6 @@ local function load_static_models(world, scene_model, static_root_node_id)
             collider:setOrientation(angle, ax, ay, az)
 
             for _, mesh in pairs(scene_mesh.meshes) do
-                print('mesh', mesh)
                 local vertices_table = mesh:getVertices(1, nil)
                 local vertices = {}
                 for _, v in pairs(vertices_table) do
