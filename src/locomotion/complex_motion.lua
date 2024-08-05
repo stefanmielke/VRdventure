@@ -49,6 +49,7 @@ function complex_motion.set_world(world)
     complex_motion.collider:setSleepingAllowed(false)
     complex_motion.collider:setOrientation(math.pi / 2, 1, 0, 0)
     complex_motion.collider:setDegreesOfFreedom('xyz', nil)
+    complex_motion.collider:setLinearDamping(1)
 
     -- local joint = lovr.physics.newDistanceJoint(complex_motion.head_collision, complex_motion.collider, x1, y1, z1, x1, y1, z1)
     -- joint:setLimits(0, 10)
@@ -151,7 +152,6 @@ local function update_height(dt, world)
 
     local hx, hy, hz = ((vec3(headset_global_pose:getPosition()) - vec3(complex_motion.collider:getPosition())) / dt):unpack()
 
-    complex_motion.collider:setMass(70)
     local _, ly, _ = complex_motion.collider:getLinearVelocity()
     complex_motion.collider:setLinearVelocity(hx, ly, hz)
 end
@@ -186,16 +186,17 @@ function complex_motion.post_update(dt, world)
     local headset_position = vec3(lovr.headset.getPosition())
     local headset_global_pose = mat4(complex_motion.pose):translate(headset_position)
 
-    local final_distance = (vec3(headset_global_pose:getPosition()) - vec3(complex_motion.collider:getPosition())):distance()
-    if final_distance > 0.1 then
+    local hx, hy, hz = headset_global_pose:getPosition()
+    local cx, cy, cz = complex_motion.collider:getPosition()
+    local final_distance = (vec3(hx, 0, hz) - vec3(cx, 0, cz)):distance()
+    if final_distance > 0.2 then
         print('invalid position')
-    else
-        print('ok position')
     end
 
     local x, _, z = complex_motion.pose:getPosition()
     local _, ny, _ = complex_motion.collider:getPosition()
     complex_motion.pose:set(vec3(x, ny - (complex_motion.current_height / 2) - .15, z), quat(complex_motion.pose:getOrientation()))
+    print(complex_motion.collision_shape:getInertia())
 end
 
 return complex_motion

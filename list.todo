@@ -52,9 +52,11 @@ vr playground:
 locomotion:
     ✔ locomotion change (tp, smooth, snap or continuous turn) @done(24-08-02 14:44)
     ☐ locomotion with collision
-        use capsule collider (change length of it every frame) for movement
-        understand how to check for camera going through walls, but not the collider (probably not move the collider, but having a DistanceJoint attached? with min 0 max total playarea?)
-        remove collision from grababbles and controllers
+        ✔ use capsule collider (change length of it every frame) for movement @done(24-08-05 18:09)
+        ☐ understand how to check for camera going through walls, but not the collider
+        ☐ remove collision from grababbles and controllers
+        ☐ do not move using controllers if motion.collider can't (attach to it?)
+        ✔ use setInertia to fix gravity on player (just increased gravity) @done(24-08-05 18:47)
     ☐ jump
     ☐ moving platforms
         just use friction?

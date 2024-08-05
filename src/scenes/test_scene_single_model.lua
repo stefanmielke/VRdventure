@@ -26,6 +26,7 @@ local function on_load()
     world = lovr.physics.newWorld({
         tags = {'grab'}
     })
+    world:setGravity(0, -50, 0)
 
     scene_loader.load_scene_complete_split_files(world, 'test_scene')
 
