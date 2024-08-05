@@ -27,16 +27,16 @@ local function on_load()
         tags = {'grab'}
     })
 
+    scene_loader.load_scene_complete_split_files(world, 'test_scene')
+
     hands.set_world(world)
     motion.set_world(world)
-
-    scene_loader.load_scene_complete_split_files(world, 'test_scene')
 
     -- Create a hinge joint for the lid
     -- local hinge = lovr.physics.newHingeJoint(chest_body, lid_body, box_w / 2, box_h, 0, 0, 0, 1)
     -- hinge:setLimits((-math.pi / 3) * 2, math.pi / 2) -- Limit the hinge to 90 degrees
     -- scene_manager.add_tracked_object(hinge)
-    
+
 end
 
 local function on_update(dt)
@@ -56,6 +56,33 @@ end
 
 local function on_render(pass)
     model.render_all_model_from_colliders(pass, world)
+
+    pass:setColor(1, 0, 0, 1)
+    pass:setWireframe(true)
+
+    local x, y, z = motion.collider:getPosition()
+    local angle, ax, ay, az = motion.collider:getOrientation()
+    pass:capsule(x, y, z, motion.collider:getShapes()[1]:getRadius(), motion.collider:getShapes()[1]:getLength(), angle,
+        ax, ay, az)
+
+    -- local x, y, z = motion.head_collision:getPosition()
+    -- local angle, ax, ay, az = motion.head_collision:getOrientation()
+    -- pass:sphere(x, y, z, motion.head_collision:getShapes()[1]:getRadius(), angle, ax, ay, az, 6)
+
+    -- local joint = motion.head_collision:getJoints()[1]
+    -- local x1, y1, z1, x2, y2, z2 = joint:getAnchors()
+
+    -- pass:setColor(1, 0, 0, 1)
+    -- pass:sphere(x1, y1, z1, .01)
+
+    -- pass:setColor(0, 1, 0, 1)
+    -- pass:sphere(x2, y2, z2, .01)
+
+    -- pass:setColor(0, 0, 1, 1)
+    -- pass:line(x1, y1, z1, x2, y2, z2)
+
+    -- pass:setWireframe(false)
+    -- pass:setColor(1, 1, 1, 1)
 end
 
 local function on_unload()
@@ -78,6 +105,8 @@ return {
     on_pre_render = on_pre_render,
     on_render = on_render,
     on_unload = on_unload,
-    initial_position = function() return get_initial_position() end,
+    initial_position = function()
+        return get_initial_position()
+    end,
     name = 'Test Scene Render From Single Model'
 }

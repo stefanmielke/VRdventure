@@ -46,6 +46,8 @@ local function update(dt, world)
     motion.update(dt, world)
 
     scene_manager.update(dt, on_scene_change)
+
+    motion.post_update(dt, world)
 end
 
 local function render_scene(pass)

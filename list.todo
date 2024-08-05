@@ -14,6 +14,8 @@ next:
     ✔ try attaching the model to the collider userdata so we can iterate over those and render as needed (does it even make sense?) @done(24-08-02 19:49)
     ✔ check the model structure to understand if we can split models on the same glb file @done(24-08-02 19:25)
     ✔ just add the name of the object and match with a lua file outside to ease the creation of the same object multiple times @done(24-08-05 09:49)
+    ☐ check if 'Collider:setContinuous' fix the issue with grabbing and moving jointed items
+    ✔ use https://lovr.org/docs/dev/Shape:getType to draw collider shapes @done(24-08-05 17:10)
 
 events:
     grabber:
@@ -50,7 +52,7 @@ vr playground:
 locomotion:
     ✔ locomotion change (tp, smooth, snap or continuous turn) @done(24-08-02 14:44)
     ☐ locomotion with collision
-        use capsule collider check every frame (do not create the collider itself) for movement
+        use capsule collider (change length of it every frame) for movement
         understand how to check for camera going through walls, but not the collider (probably not move the collider, but having a DistanceJoint attached? with min 0 max total playarea?)
         remove collision from grababbles and controllers
     ☐ jump

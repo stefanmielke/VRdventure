@@ -69,15 +69,29 @@ local function render_model_at_collider(pass, model, collider)
     end
 
     if (config.debug.show) then
-        pass:setColor(1, 0, 0, 1)
-        pass:setWireframe(false)
-        local minx, maxx, miny, maxy, minz, maxz = collider:getAABB()
-        pass:line(minx, miny, minz, maxx, miny, minz, maxx, maxy, minz, minx, maxy, minz, minx, miny, minz)
-        pass:line(minx, miny, maxz, maxx, miny, maxz, maxx, maxy, maxz, minx, maxy, maxz, minx, miny, maxz)
-        pass:line(minx, miny, minz, minx, miny, maxz)
-        pass:line(minx, maxy, minz, minx, maxy, maxz)
-        pass:line(maxx, miny, minz, maxx, miny, maxz)
-        pass:line(maxx, maxy, minz, maxx, maxy, maxz)
+        pass:setColor(1, 0, 0, 0.1)
+        pass:setWireframe(true)
+        for _, v in pairs(collider:getShapes()) do
+            local type = v:getType()
+            if type == 'box' then
+                local x, y, z = v:getPosition()
+                local angle, ax, ay, az = v:getOrientation()
+                local width, height, depth = v:getDimensions()
+                pass:box(x, y, z, width, height, depth, angle, ax, ay, az, 'line')
+            elseif type == 'sphere' then
+                local x, y, z = v:getPosition()
+                local angle, ax, ay, az = v:getOrientation()
+                pass:sphere(x, y, z, v:getRadius(), angle, ax, ay, az)
+            elseif type == 'capsule' then
+                local x, y, z = v:getPosition()
+                local angle, ax, ay, az = v:getOrientation()
+                pass:capsule(x, y, z, v:getRadius(), v:getLength(), angle, ax, ay, az)
+            elseif type == 'cylinder' then
+                local x, y, z = v:getPosition()
+                local angle, ax, ay, az = v:getOrientation()
+                pass:cylinder(x, y, z, v:getRadius(), v:getLength(), angle, ax, ay, az)
+            end
+        end
         pass:setWireframe(false)
         pass:setColor(1, 1, 1, 1)
     end
