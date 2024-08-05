@@ -20,7 +20,8 @@ local complex_motion = {
     collision_shape = nil,
     collision_shape_radius = 0.2,
 
-    head_collision = nil
+    head_collision = nil,
+    current_height = 1
 }
 
 function complex_motion.set_world(world)
@@ -33,6 +34,8 @@ function complex_motion.set_world(world)
     local headset_global_pose = mat4(complex_motion.pose):translate(headset_position)
     local _, motion_y, _ = complex_motion.pose:getPosition()
     local x1, y1, z1 = headset_global_pose:getPosition()
+
+    complex_motion.current_height = y1 - motion_y
 
     complex_motion.head_collision = world:newSphereCollider(x1, y1, z1, 0.1)
     complex_motion.head_collision:setKinematic(true)
@@ -129,27 +132,28 @@ end
 
 local function update_height(dt, world)
     -- update height
-    local headset_position = vec3(lovr.headset.getPosition())
+    local headset_position = vec3(lovr.headset.getPosition('head'))
     local headset_global_pose = mat4(complex_motion.pose):translate(headset_position)
 
     local _, motion_y, _ = complex_motion.pose:getPosition()
 
     local x1, y1, z1 = headset_global_pose:getPosition()
-    local y2 = y1 - (y1 - motion_y)
 
     local next_length = y1 - motion_y
     local last_length = complex_motion.collision_shape:getLength()
 
     -- update position of the collider to match the position of the player
     local x, y, z = complex_motion.collider:getPosition()
-    complex_motion.collision_shape:setLength(y1 - motion_y)
+    complex_motion.collision_shape:setLength(next_length)
     complex_motion.collider:setPosition(x, y + next_length - last_length, z)
+    
+    complex_motion.current_height = y1 - motion_y
 
     local hx, hy, hz = ((vec3(headset_global_pose:getPosition()) - vec3(complex_motion.collider:getPosition())) / dt):unpack()
 
     complex_motion.collider:setMass(70)
-    -- complex_motion.collider:setLinearDamping(1)
-    complex_motion.collider:setLinearVelocity(hx, hy, hz)
+    local _, ly, _ = complex_motion.collider:getLinearVelocity()
+    complex_motion.collider:setLinearVelocity(hx, ly, hz)
 end
 
 function complex_motion.update(dt, world)
@@ -181,18 +185,17 @@ end
 function complex_motion.post_update(dt, world)
     local headset_position = vec3(lovr.headset.getPosition())
     local headset_global_pose = mat4(complex_motion.pose):translate(headset_position)
-    
+
     local final_distance = (vec3(headset_global_pose:getPosition()) - vec3(complex_motion.collider:getPosition())):distance()
     if final_distance > 0.1 then
         print('invalid position')
     else
         print('ok position')
     end
-    -- if complex_motion.world then
-    --     local x, y, z = complex_motion.collider:getPosition()
-    --     print(x, y, z)
-    -- complex_motion.pose:set(vec3(x, y, z), quat(complex_motion.pose:getOrientation()))
-    -- end
+
+    local x, _, z = complex_motion.pose:getPosition()
+    local _, ny, _ = complex_motion.collider:getPosition()
+    complex_motion.pose:set(vec3(x, ny - (complex_motion.current_height / 2) - .15, z), quat(complex_motion.pose:getOrientation()))
 end
 
 return complex_motion

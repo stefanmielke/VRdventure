@@ -57,13 +57,13 @@ end
 local function on_render(pass)
     model.render_all_model_from_colliders(pass, world)
 
-    pass:setColor(1, 0, 0, 1)
-    pass:setWireframe(true)
+    -- pass:setColor(1, 0, 0, 1)
+    -- pass:setWireframe(true)
 
-    local x, y, z = motion.collider:getPosition()
-    local angle, ax, ay, az = motion.collider:getOrientation()
-    pass:capsule(x, y, z, motion.collider:getShapes()[1]:getRadius(), motion.collider:getShapes()[1]:getLength(), angle,
-        ax, ay, az)
+    -- local x, y, z = motion.collider:getPosition()
+    -- local angle, ax, ay, az = motion.collider:getOrientation()
+    -- pass:capsule(x, y, z, motion.collider:getShapes()[1]:getRadius(), motion.collider:getShapes()[1]:getLength(), angle,
+    --     ax, ay, az)
 
     -- local x, y, z = motion.head_collision:getPosition()
     -- local angle, ax, ay, az = motion.head_collision:getOrientation()
