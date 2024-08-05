@@ -111,14 +111,12 @@ local function update_height(dt, world)
     -- check collision inside the body
     world:raycast(x1, y1, z1, x1, y2, z1, nil, function(collider, shape, x, y, z, nx, ny, nz, fraction)
         complex_motion.pose:translate(0, 3 * dt, 0)
-        print('Collision detected inside!', collider, shape, x, y, z, nx, ny, nz, fraction)
         return 0
     end)
     
     local collision = false
     world:raycast(x1, y1, z1, x1, y2 - 0.1, z1, nil, function(collider, shape, x, y, z, nx, ny, nz, fraction)
         collision = true
-        print('On ground!', collider, shape, x, y, z, nx, ny, nz, fraction)
         return 0
     end)
 

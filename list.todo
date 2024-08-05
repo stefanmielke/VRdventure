@@ -13,7 +13,7 @@ next:
     ☐ configure button to grab
     ✔ try attaching the model to the collider userdata so we can iterate over those and render as needed (does it even make sense?) @done(24-08-02 19:49)
     ✔ check the model structure to understand if we can split models on the same glb file @done(24-08-02 19:25)
-    ☐ just add the name of the object and match with a lua file outside to ease the creation of the same object multiple times
+    ✔ just add the name of the object and match with a lua file outside to ease the creation of the same object multiple times @done(24-08-05 09:49)
 
 events:
     grabber:

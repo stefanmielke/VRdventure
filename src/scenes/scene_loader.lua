@@ -4,33 +4,34 @@ local helper = require 'helper'
 local grababble = require 'interaction.grababble'
 local scene_manager = require 'scenes.scene_manager'
 
-local function create_collider(world, mesh, x, y, z, extras_node)
-    if extras_node.collision_type == 'sphere' then
-        return world:newSphereCollider(x, y, z, extras_node.collision_size)
-    elseif extras_node.collision_type == 'box' then
-        return world:newBoxCollider(x, y, z, extras_node.collision_size, extras_node.collision_size,
-            extras_node.collision_size)
-    elseif extras_node.collision_type == 'convex' then
+local objects = require 'scenes.objects.all'
+
+local function create_collider(world, mesh, x, y, z, object_collision)
+    if object_collision.type == 'sphere' then
+        return world:newSphereCollider(x, y, z, object_collision.size)
+    elseif object_collision.type == 'box' then
+        return world:newBoxCollider(x, y, z, object_collision.size, object_collision.size, object_collision.size)
+    elseif object_collision.type == 'convex' then
         return world:newConvexCollider(x, y, z, mesh)
     end
 
     return nil
 end
 
-local function create_grababble(collider, extras_node)
-    if not extras_node.is_grababble then
+local function create_grababble(collider, object_grab)
+    if not object_grab.is_grababble then
         return
     end
 
     local settings = {}
-    if extras_node.grab_type and extras_node.grab_type ~= '' then
-        settings.grab_type = extras_node.grab_type
+    if object_grab.type and object_grab.type ~= '' then
+        settings.grab_type = object_grab.type
     end
-    if extras_node.velocity_mult_on_release and extras_node.velocity_mult_on_release ~= '' then
-        settings.velocity_mult_on_release = extras_node.velocity_mult_on_release
+    if object_grab.velocity_mult_on_release and object_grab.velocity_mult_on_release ~= '' then
+        settings.velocity_mult_on_release = object_grab.velocity_mult_on_release
     end
-    if extras_node.grab_joint and extras_node.grab_joint ~= '' then
-        settings.grab_joint = extras_node.grab_joint
+    if object_grab.joint and object_grab.joint ~= '' then
+        settings.grab_joint = object_grab.joint
     end
 
     grababble.add_new_to_collider(collider, settings)
@@ -62,18 +63,22 @@ local function load_scene(world, path)
             node_index = node_index + 1
         end
 
-        local extra_node = scene_json.nodes[node_index].extras
-        if extra_node then
-            if extra_node.collision_type and extra_node.collision_type ~= '' then
+        local extras_node = scene_json.nodes[node_index].extras
+        print(extras_node)
+        if extras_node and extras_node.object_type then
+            local object = objects[extras_node.object_type]
+            if object.collision.type and object.collision.type ~= '' then
                 local x, y, z = meshes_data.pose:getPosition()
-                local collider = create_collider(world, nil, x, y, z, extra_node)
+                local collider = create_collider(world, nil, x, y, z, object.collision)
                 if not collider then
                     break
                 end
 
-                create_grababble(collider, extra_node)
-                model.add_to_collider(collider, meshes)
-                scene_manager.add_tracked_object(collider)
+                if object.collision.grab then
+                    create_grababble(collider, object.collision.grab)
+                    model.add_to_collider(collider, meshes)
+                    scene_manager.add_tracked_object(collider)
+                end
             end
         end
         i = i + 1
@@ -177,18 +182,21 @@ local function load_dynamic_models(world, scene_model, static_root_node_id)
                 node_index = node_index + 1
             end
 
-            local extra_node = scene_json.nodes[node_index].extras
-            if extra_node then
-                if extra_node.collision_type and extra_node.collision_type ~= '' then
+            local extras_node = scene_json.nodes[node_index].extras
+            if extras_node and extras_node.object_type then
+                local object = objects[extras_node.object_type]
+                if object.collision.type and object.collision.type ~= '' then
                     local x, y, z = scene_mesh.pose:getPosition()
-                    local collider = create_collider(world, nil, x, y, z, extra_node)
+                    local collider = create_collider(world, nil, x, y, z, object.collision)
                     if not collider then
                         break
                     end
 
-                    create_grababble(collider, extra_node)
-                    model.add_to_collider(collider, meshes)
-                    scene_manager.add_tracked_object(collider)
+                    if object.collision.grab then
+                        create_grababble(collider, object.collision.grab)
+                        model.add_to_collider(collider, meshes)
+                        scene_manager.add_tracked_object(collider)
+                    end
                 end
             end
         end
