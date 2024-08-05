@@ -9,13 +9,8 @@ local grababble = {
 
 local function new(override_values)
     local new_grababble = helper.deep_copy(grababble)
-
-    if override_values then
-        new_grababble.is_grababble = override_values.is_grababble or new_grababble.is_grababble
-        new_grababble.grab_type = override_values.grab_type or new_grababble.grab_type
-        new_grababble.velocity_mult_on_release = override_values.velocity_mult_on_release or
-                                                     new_grababble.velocity_mult_on_release
-        new_grababble.grab_joint = override_values.grab_joint or new_grababble.grab_joint
+    for k, v in pairs(override_values or {}) do
+        new_grababble[k] = v
     end
 
     return new_grababble
