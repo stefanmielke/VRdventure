@@ -41,18 +41,17 @@ function complex_motion.set_world(world)
     complex_motion.head_collision:setKinematic(true)
     complex_motion.head_collision:setSleepingAllowed(false)
     complex_motion.head_collision:setSensor(true)
+    complex_motion.head_collision:setTag('body')
 
     local x, y, z = complex_motion.pose:getPosition()
-    complex_motion.collider = world:newCollider(x, y + (y1 - motion_y) / 2, z)
-    complex_motion.collision_shape = lovr.physics.newCapsuleShape(complex_motion.collision_shape_radius, y1 - motion_y)
+    complex_motion.collider = world:newCollider(x, y + complex_motion.current_height / 2, z)
+    complex_motion.collision_shape = lovr.physics.newCapsuleShape(complex_motion.collision_shape_radius, complex_motion.current_height)
     complex_motion.collider:addShape(complex_motion.collision_shape)
     complex_motion.collider:setSleepingAllowed(false)
     complex_motion.collider:setOrientation(math.pi / 2, 1, 0, 0)
     complex_motion.collider:setDegreesOfFreedom('xyz', nil)
     complex_motion.collider:setLinearDamping(1)
-
-    -- local joint = lovr.physics.newDistanceJoint(complex_motion.head_collision, complex_motion.collider, x1, y1, z1, x1, y1, z1)
-    -- joint:setLimits(0, 10)
+    complex_motion.collider:setTag('body')
 end
 
 function complex_motion.reset(initial_pose)

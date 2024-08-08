@@ -24,9 +24,13 @@ local function on_load()
 
     -- Initialize physics world
     world = lovr.physics.newWorld({
-        tags = {'grab'}
+        tags = {'body', 'grab', 'hands'}
     })
-    world:setGravity(0, -50, 0)
+    world:disableCollisionBetween('body', 'grab')
+    world:disableCollisionBetween('body', 'hands')
+    world:disableCollisionBetween('body', 'body')
+    
+    world:setGravity(0, -40, 0)
 
     scene_loader.load_scene_complete_split_files(world, 'test_scene')
 
